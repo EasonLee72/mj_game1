@@ -498,6 +498,7 @@
 
                 <div class="action-buttons">
                     <button class="btn btn-primary" onclick="game.start()">🎮 開始遊戲</button>
+                    <button class="btn btn-secondary" onclick="game.clearLeaderboard()" style="font-size: 0.9em; padding: 10px 20px;">🗑️ 清除分數</button>
                 </div>
             </div>
         </div>
@@ -1045,6 +1046,16 @@
                 this.showScreen('start-screen');
                 this.renderLeaderboard('leaderboard-body');
                 this.renderChampionPortrait();
+            }
+
+            clearLeaderboard() {
+                if (confirm('確定要清除所有排行榜分數和冠軍照片嗎？\n\n此操作無法復原！')) {
+                    localStorage.removeItem('mj_leaderboard');
+                    localStorage.removeItem('mj_champion_photo');
+                    this.renderLeaderboard('leaderboard-body');
+                    this.renderChampionPortrait();
+                    alert('✅ 排行榜已清除！');
+                }
             }
 
             renderChampionPortrait() {
