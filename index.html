@@ -226,116 +226,39 @@
         }
 
         .tile {
-            width: 55px;
-            height: 75px;
-            background: linear-gradient(145deg, #fffbf0 0%, #f5f0d8 50%, #e8e0c0 100%);
+            width: 60px;
+            height: 84px;
+            background: #fff;
             border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 
-                3px 3px 6px rgba(0,0,0,0.4),
-                inset 2px 2px 4px rgba(255,255,255,0.9),
-                inset -2px -2px 4px rgba(0,0,0,0.1);
-            border: 2px solid #d4b896;
+                2px 2px 5px rgba(0,0,0,0.3),
+                inset 1px 1px 3px rgba(255,255,255,0.9);
+            border: 1px solid #c9b896;
             position: relative;
             overflow: hidden;
         }
 
-        /* 麻將牌邊框裝飾 */
-        .tile::before {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            right: 4px;
-            bottom: 4px;
-            border: 1px solid rgba(212, 184, 150, 0.5);
-            border-radius: 4px;
-            pointer-events: none;
-        }
-
-        .tile .tile-content {
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .tile img {
             width: 100%;
             height: 100%;
-            padding: 4px;
-        }
-
-        /* 萬子牌樣式 */
-        .tile.wan .tile-content {
-            color: #c41e3a;
-        }
-
-        .tile.wan .wan-char {
-            font-size: 1.4em;
-            font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 1px;
-        }
-
-        .tile.wan .wan-num {
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        /* 筒子牌樣式 */
-        .tile.tong .tile-content {
-            display: grid;
-            gap: 2px;
-            padding: 4px;
-        }
-
-        .tile.tong .tong-circle {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .tile.tong .tong-circle.red {
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c41e3a);
-            border: 1px solid #8b0000;
-        }
-
-        .tile.tong .tong-circle.blue {
-            background: radial-gradient(circle at 30% 30%, #4a90d9, #1a5f7a);
-            border: 1px solid #0d3d4d;
-        }
-
-        /* 條子牌樣式 */
-        .tile.tiao .tile-content {
-            color: #2d7a4f;
-        }
-
-        .tile.tiao .tiao-char {
-            font-size: 1.4em;
-            font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-        }
-
-        .tile.tiao .tiao-bird {
-            font-size: 1.2em;
+            object-fit: cover;
+            image-rendering: -webkit-optimize-contrast;
         }
 
         .tile:hover {
             transform: translateY(-4px);
             box-shadow: 
-                5px 5px 10px rgba(0,0,0,0.5),
-                inset 2px 2px 4px rgba(255,255,255,0.9);
+                4px 4px 10px rgba(0,0,0,0.4),
+                0 0 15px rgba(255,215,0,0.3);
         }
 
         .tile.selected {
-            background: linear-gradient(145deg, #ffd700 0%, #ffc047 50%, #ffb347 100%);
             transform: translateY(-6px);
             box-shadow: 0 0 20px rgba(255,215,0,0.6);
-            border-color: #ff8c00;
+            border-color: #ffd700;
         }
 
         /* Options Buttons */
@@ -1038,60 +961,61 @@
 
                 this.currentPattern.tiles.forEach(num => {
                     const tile = document.createElement('div');
-                    tile.className = `tile ${this.currentPattern.suit}`;
+                    tile.className = 'tile';
                     
-                    let content = '';
+                    // 使用真實麻將牌圖片（來自 GitHub 開源資源）
+                    const img = document.createElement('img');
+                    img.alt = `${this.currentPattern.suit}${num}`;
+                    
+                    // 圖片命名規則：萬=m, 筒=p, 條=s, 字=z
+                    // 數字：1-9 對應 1-9，東西南北中發白對應 1-7
+                    let imgName = '';
                     if (this.currentPattern.suit === 'wan') {
-                        // 萬子：中文數字 + 萬
-                        const wanChars = ['一','二','三','四','五','六','七','八','九'];
-                        content = `
-                            <div class="wan-char">
-                                <span class="wan-num">${wanChars[num-1]}</span>
-                                <span class="wan-num">萬</span>
-                            </div>
-                        `;
+                        imgName = `m${num}.png`;
                     } else if (this.currentPattern.suit === 'tong') {
-                        // 筒子：圓圈圖案
-                        content = this.renderTongTiles(num);
+                        imgName = `p${num}.png`;
                     } else if (this.currentPattern.suit === 'tiao') {
-                        // 條子：一條是鳥，其他是中文數字 + 條
-                        if (num === 1) {
-                            content = '<div class="tiao-bird">🐦</div>';
-                        } else {
-                            const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
-                            content = `
-                                <div class="tiao-char">
-                                    <span>${tiaoChars[num]}</span>
-                                    <span>條</span>
-                                </div>
-                            `;
-                        }
+                        imgName = `s${num}.png`;
                     }
                     
-                    tile.innerHTML = `<div class="tile-content">${content}</div>`;
+                    // 使用開源麻將牌圖片 CDN
+                    img.src = `https://raw.githubusercontent.com/parallax/js-mahjong/master/images/tiles/${imgName}`;
+                    
+                    // 如果圖片載入失敗，使用備用顯示
+                    img.onerror = () => {
+                        img.src = 'data:image/svg+xml,' + encodeURIComponent(this.getFallbackTile(this.currentPattern.suit, num));
+                    };
+                    
+                    tile.appendChild(img);
                     container.appendChild(tile);
                 });
             }
 
-            // 渲染筒子牌（圓圈圖案）- 模擬真實麻將牌排列
-            renderTongTiles(num) {
-                // 筒子牌的圓圈排列（1-9）
-                // 1,5,9 是紅色，其他是藍色
-                const isRed = [1, 5, 9].includes(num);
-                const circleClass = isRed ? 'red' : 'blue';
+            // 備用麻將牌（當圖片載入失敗時使用）
+            getFallbackTile(suit, num) {
+                const wanChars = ['一','二','三','四','五','六','七','八','九'];
+                const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
                 
-                const patterns = {
-                    1: `<div style="display:flex;justify-content:center;align-items:center;height:100%"><div class="tong-circle red" style="width:24px;height:24px"></div></div>`,
-                    2: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
-                    3: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%;padding:4px"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue" style="grid-column:span 2"></div></div>`,
-                    4: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
-                    5: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle red" style="grid-column:span 2;justify-self:center"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
-                    6: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
-                    7: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle red" style="grid-column:span 2;justify-self:center"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
-                    8: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
-                    9: `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle red" style="justify-self:center"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`
-                };
-                return patterns[num] || num;
+                let text = '';
+                let color = '#c41e3a';
+                
+                if (suit === 'wan') {
+                    text = `${wanChars[num-1]}萬`;
+                    color = '#c41e3a';
+                } else if (suit === 'tong') {
+                    text = '🔴'.repeat(num > 5 ? 5 : num);
+                    if (num > 5) text += '🔴'.repeat(num - 5);
+                    color = '#1a5f7a';
+                } else if (suit === 'tiao') {
+                    if (num === 1) {
+                        text = '🐦';
+                    } else {
+                        text = `${tiaoChars[num]}條`;
+                    }
+                    color = '#2d7a4f';
+                }
+                
+                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 84" style="background:#fff;border-radius:6px"><rect width="60" height="84" fill="%23fffbf0" stroke="%23c9b896" stroke-width="2" rx="6"/><text x="30" y="45" text-anchor="middle" font-size="24" fill="${color}" font-family="Arial">${text}</text></svg>`;
             }
 
             getNumberDisplay(num) {
