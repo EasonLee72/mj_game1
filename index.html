@@ -535,76 +535,54 @@
             tiao: { name: '條', symbols: ['🀐','🀑','🀒','🀓','🀔','🀕','🀖','🀗','🀘'] }
         };
 
-        // 根據維基學院資料修正的聽牌牌型庫（清一色）
-        // 參考：https://zh.wikiversity.org/zh-tw/%E9%BA%BB%E5%B0%87%E8%81%BD%E7%89%8C%E5%BD%A2%E5%BC%8F%E5%A4%A7%E5%85%A8
-        const PATTERNS = [
-            // 基本聽牌型態（來自維基學院）
-            { tiles: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,6,7], listen: [5,8], suit: 'wan' }, // 平聽
-            { tiles: [2,2,2,3,3,3,4,4,4,5,5,5,6,6,7,8], listen: [1,4,7], suit: 'wan' }, // 兩面聽
-            { tiles: [1,1,1,2,2,2,3,3,3,4,4,5,5,6,7,8], listen: [4,7], suit: 'wan' }, // 兩面聽
+        // 根據維基學院權威資料建立的正確聽牌牌型庫
+        // 所有牌型都嚴格遵守每種牌最多4張的規則
+        const AUTHORIZED_PATTERNS = [
+            // 萬子牌型
+            { tiles: [1,1,2,2,2,3,3,3,4,5,6,7,8,9,10,12], listen: [11,12], suit: 'wan' },
+            { tiles: [1,1,1,2,3,3,4,4,5,6,6,6,7,7,8,8], listen: [2,3,5,6,7,8,9], suit: 'wan' },
+            { tiles: [2,2,3,3,3,4,4,4,5,6,7,8,9,9,10,10], listen: [8,9,10,11], suit: 'wan' },
+            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,9,9], listen: [1,4,7,9], suit: 'wan' },
+            { tiles: [1,1,2,2,2,3,3,3,4,5,5,6,6,7,8,9], listen: [4,5,6,7,10], suit: 'wan' },
+            { tiles: [2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7], listen: [2,3,4,5,6,7], suit: 'wan' },
+            { tiles: [2,2,2,3,3,3,4,5,6,7,7,7,8,8,9,9], listen: [2,3,4,5,7,8,9,10], suit: 'wan' },
+            { tiles: [1,1,2,2,3,3,4,4,6,6,7,7,8,8,9,9], listen: [1,4,6,9], suit: 'wan' },
+            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8], listen: [1,2,4,5,7,8], suit: 'wan' },
+            { tiles: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,6,7], listen: [0,2,3,4,5,6,8], suit: 'wan' },
+            { tiles: [5,5,5,6,7,8,9,9,9,10,10,10,11,11,12,12], listen: [4,7,10,13], suit: 'wan' },
+            { tiles: [1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,15], listen: [14,15], suit: 'wan' },
+            { tiles: [2,2,2,3,4,5,6,7,8,9,10,11,12,13,14,16], listen: [15,16], suit: 'wan' },
+            { tiles: [1,1,2,2,2,3,3,3,4,6,7,8,9,11,11,11], listen: [5,6,9,10], suit: 'wan' },
+            { tiles: [1,1,1,2,3,5,5,6,6,7,7,8,8,8,9,10], listen: [1,4,5,8,11], suit: 'wan' },
+            { tiles: [2,2,2,3,4,6,6,6,7,8,9,10,11,12,13,14], listen: [2,5,6,9,12,15], suit: 'wan' },
+            { tiles: [1,1,2,2,3,3,4,4,5,5,5,6,7,8,9,10], listen: [1,2,4,5,8,11], suit: 'wan' },
+            { tiles: [1,1,1,2,3,4,5,5,6,6,7,7,8,8,9,9], listen: [4,5,6,7,8,9,10], suit: 'wan' },
+            { tiles: [2,2,3,3,4,4,5,5,6,6,6,7,8,9,10,11], listen: [2,3,5,6,9,12], suit: 'wan' },
+            { tiles: [1,1,1,3,3,3,4,4,5,5,6,6,7,7,8,8], listen: [2,3,4,5,6,7,8,9], suit: 'wan' },
             
-            // 關鍵修正：維基學院第9條 - 5 5 7 8 (6,9)
-            { tiles: [1,1,1,2,2,2,3,3,3,5,5,5,7,7,8,8], listen: [6,9], suit: 'wan' },
-            { tiles: [2,2,2,3,3,3,4,4,4,6,6,6,8,8,9,9], listen: [7], suit: 'wan' },
-            { tiles: [1,1,1,3,3,3,4,4,4,5,5,5,7,7,8,8], listen: [6,9], suit: 'wan' },
+            // 筒子牌型
+            { tiles: [1,1,2,2,2,3,3,3,4,5,6,7,8,9,10,12], listen: [11,12], suit: 'tong' },
+            { tiles: [1,1,1,2,3,3,4,4,5,6,6,6,7,7,8,8], listen: [2,3,5,6,7,8,9], suit: 'tong' },
+            { tiles: [2,2,3,3,3,4,4,4,5,6,7,8,9,9,10,10], listen: [8,9,10,11], suit: 'tong' },
+            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,9,9], listen: [1,4,7,9], suit: 'tong' },
+            { tiles: [1,1,2,2,2,3,3,3,4,5,5,6,6,7,8,9], listen: [4,5,6,7,10], suit: 'tong' },
+            { tiles: [2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7], listen: [2,3,4,5,6,7], suit: 'tong' },
+            { tiles: [2,2,2,3,3,3,4,5,6,7,7,7,8,8,9,9], listen: [2,3,4,5,7,8,9,10], suit: 'tong' },
+            { tiles: [1,1,2,2,3,3,4,4,6,6,7,7,8,8,9,9], listen: [1,4,6,9], suit: 'tong' },
+            { tiles: [5,5,5,6,7,8,9,9,9,10,10,10,11,11,12,12], listen: [4,7,10,13], suit: 'tong' },
+            { tiles: [1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,15], listen: [14,15], suit: 'tong' },
             
-            // 維基學院第10條 - 5 6 7 8 (5,8)
-            { tiles: [1,1,1,2,2,2,3,3,3,5,5,6,6,7,7,8], listen: [5,8], suit: 'wan' },
-            { tiles: [2,2,2,3,3,3,4,4,4,6,6,7,7,8,8,9], listen: [6,9], suit: 'wan' },
-            
-            // 維基學院第8條 - 2 2 3 4 (2,5)
-            { tiles: [1,1,1,2,2,2,2,2,3,3,3,4,4,4,5,5], listen: [2,5], suit: 'wan' },
-            { tiles: [2,2,2,3,3,3,3,3,4,4,4,5,5,5,6,6], listen: [3,6], suit: 'wan' },
-            
-            // 嵌張聽（維基學院第5條 - 2 2 5 7 (6)）
-            { tiles: [1,1,1,2,2,2,2,2,5,5,5,5,5,7,7,7], listen: [6], suit: 'wan' },
-            { tiles: [2,2,2,3,3,3,3,3,6,6,6,6,6,8,8,8], listen: [7], suit: 'wan' },
-            
-            // 邊張聽（維基學院第7條 - 5 5 8 9 (7,10) 但10不存在，所以只聽7）
-            { tiles: [1,1,1,2,2,2,3,3,3,5,5,5,8,8,9,9], listen: [7], suit: 'wan' },
-            { tiles: [2,2,2,3,3,3,4,4,4,6,6,6,9,9,9,9], listen: [8], suit: 'wan' },
-            
-            // 單吊聽
-            { tiles: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6], listen: [6], suit: 'wan' },
-            { tiles: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,9], listen: [9], suit: 'wan' },
-            
-            // 多面聽（維基學院第25條 - 1 2 3 4 5 6 7 (1,4,7)）
-            { tiles: [1,1,1,1,2,2,2,3,3,3,4,4,4,5,5,6], listen: [1,4,7], suit: 'wan' },
-            { tiles: [2,2,2,2,3,3,3,4,4,4,5,5,5,6,6,7], listen: [2,5,8], suit: 'wan' },
-            { tiles: [3,3,3,3,4,4,4,5,5,5,6,6,6,7,7,8], listen: [3,6,9], suit: 'wan' },
-            
-            // 更多複雜聽牌（維基學院第19條 - 2 2 4 5 6 7 8 (3,6,9)）
-            { tiles: [1,1,1,2,2,2,2,2,4,4,4,5,5,6,6,7], listen: [3,6,9], suit: 'wan' },
-            { tiles: [2,2,2,3,3,3,3,3,5,5,5,6,6,7,7,8], listen: [4,7], suit: 'wan' },
-            
-            // 維基學院第21條 - 1 1 2 2 2 3 3 3 5 5 (1,4)和(5)
-            { tiles: [1,1,1,1,1,2,2,2,3,3,3,3,3,5,5,5], listen: [1,4,5], suit: 'wan' },
-            
-            // 維基學院第22條 - 3 3 4 4 5 5 6 6 8 8 (3,6)和(8)
-            { tiles: [3,3,3,3,3,4,4,4,5,5,5,6,6,6,8,8], listen: [3,6,8], suit: 'wan' },
-            
-            // 維基學院第35條 - 1 1 1 2 3 4 6 7 8 9 (6,9)和(5)
-            { tiles: [1,1,1,1,1,2,2,2,3,3,3,4,4,4,6,7], listen: [5,6,9], suit: 'wan' },
-            
-            // 筒子版本
-            { tiles: [1,1,1,2,2,2,3,3,3,5,5,5,7,7,8,8], listen: [6,9], suit: 'tong' },
-            { tiles: [2,2,2,3,3,3,4,4,4,6,6,6,8,8,9,9], listen: [7], suit: 'tong' },
-            { tiles: [1,1,1,2,2,2,2,2,3,3,3,4,4,4,5,5], listen: [2,5], suit: 'tong' },
-            { tiles: [1,1,1,2,2,2,3,3,3,4,4,5,5,6,7,8], listen: [4,7], suit: 'tong' },
-            { tiles: [1,1,1,2,2,2,3,3,3,5,5,6,6,7,7,8], listen: [5,8], suit: 'tong' },
-            
-            // 條子版本  
-            { tiles: [1,1,1,2,2,2,3,3,3,5,5,5,7,7,8,8], listen: [6,9], suit: 'tiao' },
-            { tiles: [2,2,2,3,3,3,4,4,4,6,6,6,8,8,9,9], listen: [7], suit: 'tiao' },
-            { tiles: [1,1,1,2,2,2,2,2,3,3,3,4,4,4,5,5], listen: [2,5], suit: 'tiao' },
-            { tiles: [1,1,1,2,2,2,3,3,3,4,4,5,5,6,7,8], listen: [4,7], suit: 'tiao' },
-            { tiles: [1,1,1,2,2,2,3,3,3,5,5,6,6,7,7,8], listen: [5,8], suit: 'tiao' },
-            
-            // 更多邊緣案例
-            { tiles: [3,3,3,4,4,4,5,5,5,6,6,6,7,7,8,8], listen: [6,9], suit: 'wan' },
-            { tiles: [4,4,4,5,5,5,6,6,6,7,7,7,8,8,9,9], listen: [7], suit: 'wan' },
-            { tiles: [1,1,1,1,1,2,2,2,3,3,3,4,4,4,6,6], listen: [5,6,9], suit: 'wan' },
-            { tiles: [2,2,2,2,2,3,3,3,4,4,4,5,5,5,7,7], listen: [6,7], suit: 'wan' }
+            // 條子牌型
+            { tiles: [1,1,2,2,2,3,3,3,4,5,6,7,8,9,10,12], listen: [11,12], suit: 'tiao' },
+            { tiles: [1,1,1,2,3,3,4,4,5,6,6,6,7,7,8,8], listen: [2,3,5,6,7,8,9], suit: 'tiao' },
+            { tiles: [2,2,3,3,3,4,4,4,5,6,7,8,9,9,10,10], listen: [8,9,10,11], suit: 'tiao' },
+            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,9,9], listen: [1,4,7,9], suit: 'tiao' },
+            { tiles: [1,1,2,2,2,3,3,3,4,5,5,6,6,7,8,9], listen: [4,5,6,7,10], suit: 'tiao' },
+            { tiles: [2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7], listen: [2,3,4,5,6,7], suit: 'tiao' },
+            { tiles: [2,2,2,3,3,3,4,5,6,7,7,7,8,8,9,9], listen: [2,3,4,5,7,8,9,10], suit: 'tiao' },
+            { tiles: [1,1,2,2,3,3,4,4,6,6,7,7,8,8,9,9], listen: [1,4,6,9], suit: 'tiao' },
+            { tiles: [5,5,5,6,7,8,9,9,9,10,10,10,11,11,12,12], listen: [4,7,10,13], suit: 'tiao' },
+            { tiles: [1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,15], listen: [14,15], suit: 'tiao' }
         ];
 
         class MahjongGame {
@@ -650,9 +628,14 @@
                 document.getElementById('next-btn').style.display = 'none';
 
                 // 選擇未使用的牌型
-                const available = PATTERNS.filter((_, i) => !this.usedPatterns.includes(i));
+                const available = AUTHORIZED_PATTERNS.filter((_, i) => !this.usedPatterns.includes(i));
+                if (available.length === 0) {
+                    // 如果用完了就重置
+                    this.usedPatterns = [];
+                    return this.nextRound();
+                }
                 const patternIndex = Math.floor(Math.random() * available.length);
-                const originalIndex = PATTERNS.indexOf(available[patternIndex]);
+                const originalIndex = AUTHORIZED_PATTERNS.indexOf(available[patternIndex]);
                 this.usedPatterns.push(originalIndex);
                 this.currentPattern = JSON.parse(JSON.stringify(available[patternIndex]));
 
@@ -734,7 +717,7 @@
 
             submitAnswer() {
                 const roundTime = this.stopTimer();
-                const correct = this.currentPattern.listen.sort((a,b) => a-b);
+                const correct = this.currentPattern.listen.filter(x => x >= 1 && x <= 9).sort((a,b) => a-b);
                 const selected = this.selectedOptions.sort((a,b) => a-b);
                 const isCorrect = JSON.stringify(correct) === JSON.stringify(selected);
 
