@@ -90,6 +90,89 @@
             font-style: italic;
         }
 
+        /* Admin Login & Panel */
+        .admin-link {
+            text-align: center;
+            margin-top: 30px;
+            opacity: 0.5;
+        }
+
+        .admin-link a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .admin-link a:hover {
+            color: #ffd700;
+        }
+
+        .admin-panel {
+            background: rgba(0,0,0,0.4);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .admin-panel h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .admin-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .admin-form input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #d4a574;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: inherit;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .admin-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .admin-stat {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-stat .label {
+            opacity: 0.8;
+        }
+
+        .admin-stat .value {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .danger-btn {
+            background: linear-gradient(145deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .danger-btn:hover {
+            background: linear-gradient(145deg, #ff5252 0%, #f44336 100%);
+        }
+
         .game-info {
             display: flex;
             justify-content: space-around;
@@ -498,7 +581,10 @@
 
                 <div class="action-buttons">
                     <button class="btn btn-primary" onclick="game.start()">🎮 開始遊戲</button>
-                    <button class="btn btn-secondary" onclick="game.clearLeaderboard()" style="font-size: 0.9em; padding: 10px 20px;">🗑️ 清除分數</button>
+                </div>
+
+                <div class="admin-link">
+                    <a onclick="game.showAdminLogin()">🔧 管理員登入</a>
                 </div>
             </div>
         </div>
@@ -596,6 +682,58 @@
             <div class="action-buttons">
                 <button class="btn btn-primary" onclick="game.saveScore()">💾 儲存成績</button>
                 <button class="btn btn-secondary" onclick="game.closeModal()">❌ 取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content">
+            <h2>🔐 管理員登入</h2>
+            <div class="admin-form">
+                <input type="text" id="admin-username" placeholder="帳號">
+                <input type="password" id="admin-password" placeholder="密碼">
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="game.adminLogin()">登入</button>
+                <button class="btn btn-secondary" onclick="game.closeAdminLogin()">取消</button>
+            </div>
+            <p id="admin-login-error" style="color: #f44336; margin-top: 15px; display: none;"></p>
+        </div>
+    </div>
+
+    <!-- Admin Panel Screen -->
+    <div id="admin-screen" class="screen">
+        <div class="header">
+            <h1>🔧 管理介面</h1>
+        </div>
+
+        <div class="admin-panel">
+            <h3>📊 系統狀態</h3>
+            <div class="admin-stat">
+                <span class="label">排行榜人數</span>
+                <span class="value" id="admin-player-count">0</span>
+            </div>
+            <div class="admin-stat">
+                <span class="label">冠軍</span>
+                <span class="value" id="admin-champion">-</span>
+            </div>
+            <div class="admin-stat">
+                <span class="label">冠軍分數</span>
+                <span class="value" id="admin-champion-score">-</span>
+            </div>
+            <div class="admin-stat">
+                <span class="label">冠軍照片</span>
+                <span class="value" id="admin-has-photo">無</span>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <h3>⚙️ 管理操作</h3>
+            <div class="admin-actions">
+                <button class="btn danger-btn" onclick="game.clearLeaderboard()">🗑️ 清除所有分數</button>
+                <button class="btn btn-secondary" onclick="game.showScreen('start-screen')">🔙 返回主頁</button>
+                <button class="btn btn-secondary" onclick="game.adminLogout()">登出</button>
             </div>
         </div>
     </div>
@@ -1087,6 +1225,61 @@
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 document.getElementById(screenId).classList.add('active');
             }
+
+            // Admin functions
+            showAdminLogin() {
+                document.getElementById('admin-login-modal').classList.add('active');
+                document.getElementById('admin-username').focus();
+            }
+
+            closeAdminLogin() {
+                document.getElementById('admin-login-modal').classList.remove('active');
+                document.getElementById('admin-username').value = '';
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-login-error').style.display = 'none';
+            }
+
+            adminLogin() {
+                const username = document.getElementById('admin-username').value.trim();
+                const password = document.getElementById('admin-password').value.trim();
+                const errorEl = document.getElementById('admin-login-error');
+
+                // 硬編碼帳號密碼
+                if (username === 'eason' && password === 'tpl77xx') {
+                    this.isAdmin = true;
+                    this.closeAdminLogin();
+                    this.showScreen('admin-screen');
+                    this.updateAdminPanel();
+                } else {
+                    errorEl.textContent = '❌ 帳號或密碼錯誤';
+                    errorEl.style.display = 'block';
+                }
+            }
+
+            adminLogout() {
+                this.isAdmin = false;
+                this.showScreen('start-screen');
+                this.renderLeaderboard('leaderboard-body');
+                this.renderChampionPortrait();
+            }
+
+            updateAdminPanel() {
+                const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+                const championPhoto = localStorage.getItem('mj_champion_photo');
+
+                document.getElementById('admin-player-count').textContent = leaderboard.length;
+                
+                if (leaderboard.length > 0) {
+                    const champion = leaderboard[0];
+                    document.getElementById('admin-champion').textContent = champion.name;
+                    document.getElementById('admin-champion-score').textContent = champion.score + ' 分';
+                    document.getElementById('admin-has-photo').textContent = championPhoto ? '✅ 有' : '❌ 無';
+                } else {
+                    document.getElementById('admin-champion').textContent = '-';
+                    document.getElementById('admin-champion-score').textContent = '-';
+                    document.getElementById('admin-has-photo').textContent = '-';
+                }
+            }
         }
 
         // 初始化遊戲
@@ -1101,6 +1294,11 @@
         // Enter 鍵提交姓名
         document.getElementById('player-name').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') game.saveScore();
+        });
+
+        // Enter 鍵登入管理介面
+        document.getElementById('admin-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') game.adminLogin();
         });
     </script>
 </body>
