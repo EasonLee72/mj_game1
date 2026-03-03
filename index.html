@@ -262,39 +262,36 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
-            padding: 25px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 15px;
+            gap: 10px;
+            padding: 20px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 12px;
             margin: 20px 0;
         }
 
         .option-btn {
-            padding: 12px 20px;
-            font-size: 1.15em;
-            min-width: 90px;
-            background: linear-gradient(145deg, #f5deb3 0%, #d2b48c 100%);
-            border: 2px solid #8b7355;
-            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 1.1em;
+            min-width: 80px;
+            background: linear-gradient(145deg, #f0d9b5 0%, #e0c095 100%);
+            border: 2px solid #b8956a;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             font-family: inherit;
             font-weight: bold;
-            color: #2d4a22;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            color: #3d3d3d;
         }
 
         .option-btn:hover {
-            background: linear-gradient(145deg, #ffe4b5 0%, #deb887 100%);
-            transform: scale(1.05);
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(145deg, #f5e0c0 0%, #e5c8a0 100%);
+            transform: scale(1.03);
         }
 
         .option-btn.selected {
-            background: linear-gradient(145deg, #90EE90 0%, #228B22 100%);
+            background: linear-gradient(145deg, #5cb85c 0%, #449d44 100%);
             color: white;
-            border-color: #1a5c1a;
-            box-shadow: 0 0 15px rgba(76,175,80,0.5), inset 2px 2px 5px rgba(255,255,255,0.3);
+            border-color: #398439;
         }
 
         /* Action Buttons */
@@ -317,15 +314,15 @@
         }
 
         .btn-primary {
-            background: linear-gradient(145deg, #9acd32 0%, #6b8e23 100%);
-            color: white;
-            border: 2px solid #556b2f;
+            background: linear-gradient(145deg, #ffd700 0%, #ffb300 100%);
+            color: #2d3e2a;
+            border: 2px solid #cc9900;
+            padding: 12px 50px;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(145deg, #b8d646 0%, #7da336 100%);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(154,205,50,0.5);
+            background: linear-gradient(145deg, #ffe033 0%, #ffc400 100%);
+            transform: scale(1.03);
         }
 
         .btn-secondary {
@@ -609,7 +606,7 @@
             <div class="timer-display" id="timer">00:00</div>
 
             <!-- 題目區域 -->
-            <div class="section-title" style="text-align: center; font-size: 1.3em; color: #ffd700; margin: 20px 0 10px; font-weight: bold;">
+            <div class="section-title" style="text-align: center; font-size: 1.2em; color: #ffd700; margin: 15px 0 10px; font-weight: bold;">
                 🀄 題目：請看下面的手牌
             </div>
             <div class="tiles-container" id="tiles-container"></div>
@@ -617,8 +614,8 @@
             <div id="feedback" class="feedback" style="display: none;"></div>
 
             <!-- 答題區域 -->
-            <div class="section-title" style="text-align: center; font-size: 1.3em; color: #ffd700; margin: 20px 0 10px; font-weight: bold;">
-                ✍️ 答題：選擇你認為的聽牌
+            <div class="section-title" style="text-align: center; font-size: 1.2em; color: #ffd700; margin: 15px 0 10px; font-weight: bold;">
+                🫵 答題：選擇你認為的聽牌
             </div>
             <div class="options-container" id="options-container"></div>
 

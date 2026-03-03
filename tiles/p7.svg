@@ -16,25 +16,13 @@
   <!-- 牌面內容 -->
   <g transform="translate(30, 42)">
     
-        <defs>
-            <radialGradient id="redCircle" cx="35%" cy="35%">
-                <stop offset="0%" style="stop-color:#ff8888"/>
-                <stop offset="100%" style="stop-color:#e04040"/>
-            </radialGradient>
-            <radialGradient id="blueCircle" cx="35%" cy="35%">
-                <stop offset="0%" style="stop-color:#66a8ff"/>
-                <stop offset="100%" style="stop-color:#2060c0"/>
-            </radialGradient>
-        </defs>
+            <circle cx="-8" cy="-14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="-14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-8" cy="0" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="0" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-8" cy="14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="0" cy="0" r="7" fill="#e63946" stroke="#c1121f" stroke-width="0.7"/>
+            <circle cx="8" cy="14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
         
-            <circle cx="-4.666666666666667" cy="-7" r="6" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="4.666666666666667" cy="-7" r="6" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="-4.666666666666667" cy="0" r="6" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="4.666666666666667" cy="0" r="6" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="-4.666666666666667" cy="7" r="6" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="0" cy="0" r="7.5" fill="url(#redCircle)" stroke="#c03030" stroke-width="0.7"/>
-            <circle cx="4.666666666666667" cy="7" r="6" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-        
-    
   </g>
 </svg>

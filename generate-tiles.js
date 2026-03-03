@@ -36,96 +36,90 @@ function generateTileSVG(suit, num, content) {
 </svg>`;
 }
 
-// 筒子牌圓圈
+// 筒子牌圓圈 - 按照參考圖：1-2 筒紅點，3-9 筒藍點
 function generateTongCircles(num) {
-    const circleSize = 10;
-    const spacing = 14;
-    
     const patterns = {
-        1: `<circle cx="0" cy="0" r="${circleSize}" fill="url(#redCircle)" stroke="#c03030" stroke-width="1"/>`,
+        // 1 筒：一個大紅點居中
+        1: `<circle cx="0" cy="0" r="12" fill="#e63946" stroke="#c1121f" stroke-width="1.5"/>`,
         
+        // 2 筒：兩個紅點直排
         2: `
-            <circle cx="0" cy="-${spacing/2}" r="${circleSize * 0.85}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.8"/>
-            <circle cx="0" cy="${spacing/2}" r="${circleSize * 0.85}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.8"/>
+            <circle cx="0" cy="-12" r="9" fill="#e63946" stroke="#c1121f" stroke-width="1"/>
+            <circle cx="0" cy="12" r="9" fill="#e63946" stroke="#c1121f" stroke-width="1"/>
         `,
         
+        // 3 筒：上面兩個藍點，下面一個藍點
         3: `
-            <circle cx="-${spacing/3}" cy="-${spacing/3}" r="${circleSize * 0.75}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.7"/>
-            <circle cx="${spacing/3}" cy="-${spacing/3}" r="${circleSize * 0.75}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.7"/>
-            <circle cx="0" cy="${spacing/2}" r="${circleSize * 0.75}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.7"/>
+            <circle cx="-10" cy="-10" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
+            <circle cx="10" cy="-10" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
+            <circle cx="0" cy="12" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
         `,
         
+        // 4 筒：2x2 藍點
         4: `
-            <circle cx="-${spacing/3}" cy="-${spacing/3}" r="${circleSize * 0.75}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.7"/>
-            <circle cx="${spacing/3}" cy="-${spacing/3}" r="${circleSize * 0.75}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.7"/>
-            <circle cx="-${spacing/3}" cy="${spacing/3}" r="${circleSize * 0.75}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.7"/>
-            <circle cx="${spacing/3}" cy="${spacing/3}" r="${circleSize * 0.75}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.7"/>
+            <circle cx="-9" cy="-9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
+            <circle cx="9" cy="-9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
+            <circle cx="-9" cy="9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
+            <circle cx="9" cy="9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
         `,
         
+        // 5 筒：四角藍點 + 中間紅點
         5: `
-            <circle cx="-${spacing/2.5}" cy="-${spacing/2.5}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="${spacing/2.5}" cy="-${spacing/2.5}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="0" cy="0" r="${circleSize * 0.8}" fill="url(#redCircle)" stroke="#c03030" stroke-width="0.8"/>
-            <circle cx="-${spacing/2.5}" cy="${spacing/2.5}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="${spacing/2.5}" cy="${spacing/2.5}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
+            <circle cx="-11" cy="-11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="11" cy="-11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="0" cy="0" r="8" fill="#e63946" stroke="#c1121f" stroke-width="0.8"/>
+            <circle cx="-11" cy="11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="11" cy="11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
         `,
         
+        // 6 筒：2x3 藍點
         6: `
-            <circle cx="-${spacing/3}" cy="-${spacing/2}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="${spacing/3}" cy="-${spacing/2}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="-${spacing/3}" cy="0" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="${spacing/3}" cy="0" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="-${spacing/3}" cy="${spacing/2}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
-            <circle cx="${spacing/3}" cy="${spacing/2}" r="${circleSize * 0.65}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.6"/>
+            <circle cx="-8" cy="-14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="8" cy="-14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="-8" cy="0" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="8" cy="0" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="-8" cy="14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="8" cy="14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
         `,
         
+        // 7 筒：六個藍點 + 中間紅點
         7: `
-            <circle cx="-${spacing/3}" cy="-${spacing/2}" r="${circleSize * 0.6}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="${spacing/3}" cy="-${spacing/2}" r="${circleSize * 0.6}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="-${spacing/3}" cy="0" r="${circleSize * 0.6}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="${spacing/3}" cy="0" r="${circleSize * 0.6}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="-${spacing/3}" cy="${spacing/2}" r="${circleSize * 0.6}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="0" cy="0" r="${circleSize * 0.75}" fill="url(#redCircle)" stroke="#c03030" stroke-width="0.7"/>
-            <circle cx="${spacing/3}" cy="${spacing/2}" r="${circleSize * 0.6}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
+            <circle cx="-8" cy="-14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="-14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-8" cy="0" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="0" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-8" cy="14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="0" cy="0" r="7" fill="#e63946" stroke="#c1121f" stroke-width="0.7"/>
+            <circle cx="8" cy="14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
         `,
         
+        // 8 筒：2x4 藍點
         8: `
-            <circle cx="-${spacing/3}" cy="-${spacing/2.5}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="${spacing/3}" cy="-${spacing/2.5}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="-${spacing/3}" cy="-${spacing/6}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="${spacing/3}" cy="-${spacing/6}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="-${spacing/3}" cy="${spacing/6}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="${spacing/3}" cy="${spacing/6}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="-${spacing/3}" cy="${spacing/2.5}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
-            <circle cx="${spacing/3}" cy="${spacing/2.5}" r="${circleSize * 0.55}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.5"/>
+            <circle cx="-8" cy="-16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="-16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-8" cy="-5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="-5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-8" cy="5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-8" cy="16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="8" cy="16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
         `,
         
+        // 9 筒：九宮格（八藍 + 一中紅）
         9: `
-            <circle cx="-${spacing/2}" cy="-${spacing/2}" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
-            <circle cx="0" cy="-${spacing/2}" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
-            <circle cx="${spacing/2}" cy="-${spacing/2}" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
-            <circle cx="-${spacing/2}" cy="0" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
-            <circle cx="0" cy="0" r="${circleSize * 0.7}" fill="url(#redCircle)" stroke="#c03030" stroke-width="0.65"/>
-            <circle cx="${spacing/2}" cy="0" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
-            <circle cx="-${spacing/2}" cy="${spacing/2}" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
-            <circle cx="0" cy="${spacing/2}" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
-            <circle cx="${spacing/2}" cy="${spacing/2}" r="${circleSize * 0.5}" fill="url(#blueCircle)" stroke="#1850a0" stroke-width="0.45"/>
+            <circle cx="-11" cy="-11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="0" cy="-11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="11" cy="-11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="-11" cy="0" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="0" cy="0" r="6" fill="#e63946" stroke="#c1121f" stroke-width="0.6"/>
+            <circle cx="11" cy="0" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="-11" cy="11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="0" cy="11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="11" cy="11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
         `
     };
     
-    return `
-        <defs>
-            <radialGradient id="redCircle" cx="35%" cy="35%">
-                <stop offset="0%" style="stop-color:#ff8888"/>
-                <stop offset="100%" style="stop-color:#e04040"/>
-            </radialGradient>
-            <radialGradient id="blueCircle" cx="35%" cy="35%">
-                <stop offset="0%" style="stop-color:#66a8ff"/>
-                <stop offset="100%" style="stop-color:#2060c0"/>
-            </radialGradient>
-        </defs>
-        ${patterns[num]}
-    `;
+    return patterns[num] || '';
 }
 
 // 萬子牌文字
@@ -137,7 +131,7 @@ function generateWanText(num) {
     `;
 }
 
-// 條子牌
+// 條子牌 - 橫排中文數字 + 條
 function generateTiaoText(num) {
     if (num === 1) {
         // 一條是小鳥
@@ -147,8 +141,7 @@ function generateTiaoText(num) {
     } else {
         const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
         return `
-            <text x="0" y="-5" font-size="18" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">${tiaoChars[num]}</text>
-            <text x="0" y="20" font-size="18" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">條</text>
+            <text x="0" y="8" font-size="20" font-weight="bold" fill="#2d5a3d" text-anchor="middle" font-family="Microsoft JhengHei, Arial, sans-serif">${tiaoChars[num]}條</text>
         `;
     }
 }
