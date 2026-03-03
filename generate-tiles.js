@@ -131,19 +131,49 @@ function generateWanText(num) {
     `;
 }
 
-// 條子牌 - 橫排中文數字 + 條
+// 條子牌 - 按照參考圖用竹節圖案
 function generateTiaoText(num) {
-    if (num === 1) {
-        // 一條是小鳥
-        return `
-            <text x="0" y="8" font-size="32" text-anchor="middle" font-family="Arial, sans-serif">🐦</text>
-        `;
-    } else {
-        const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
-        return `
-            <text x="0" y="8" font-size="20" font-weight="bold" fill="#2d5a3d" text-anchor="middle" font-family="Microsoft JhengHei, Arial, sans-serif">${tiaoChars[num]}條</text>
-        `;
-    }
+    // 竹節的基本樣式 - 綠色竹節
+    const bamboo = (x, y, red = false) => {
+        const color = red ? '#e63946' : '#2d5a3d';
+        const stroke = red ? '#c1121f' : '#1a3d2a';
+        return `<g transform="translate(${x},${y})">
+            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="${color}" stroke="${stroke}" stroke-width="0.5"/>
+            <ellipse cx="0" cy="0" rx="3" ry="7" fill="${color}" stroke="${stroke}" stroke-width="0.5"/>
+            <ellipse cx="0" cy="6" rx="3" ry="7" fill="${color}" stroke="${stroke}" stroke-width="0.5"/>
+        </g>`;
+    };
+    
+    const patterns = {
+        // 一條：小鳥
+        1: `<g transform="scale(0.035)"><path d="M150,350 C100,300 50,250 30,200 C10,150 20,100 50,60 C80,20 130,0 180,10 C230,20 270,70 280,130 C290,190 260,250 210,280 C190,290 170,310 160,340 C150,370 170,400 200,400 L150,350 Z" fill="#e63946" stroke="#c1121f" stroke-width="4"/><circle cx="180" cy="120" r="12" fill="white"/><circle cx="185" cy="115" r="4" fill="black"/><path d="M230,150 L280,130 L230,170 Z" fill="#e63946"/><path d="M140,320 L110,370 L160,350 Z" fill="#e63946"/><path d="M180,320 L210,370 L160,350 Z" fill="#e63946"/></g>`,
+        
+        // 二條：兩個竹節直排
+        2: `${bamboo(0, -12)}${bamboo(0, 12)}`,
+        
+        // 三條：上面兩個，下面一個居中
+        3: `${bamboo(-10, -10)}${bamboo(10, -10)}${bamboo(0, 15)}`,
+        
+        // 四條：2x2 排列
+        4: `${bamboo(-8, -12)}${bamboo(8, -12)}${bamboo(-8, 12)}${bamboo(8, 12)}`,
+        
+        // 五條：四角竹節 + 中間紅竹節
+        5: `${bamboo(-10, -12)}${bamboo(10, -12)}${bamboo(0, 0, true)}${bamboo(-10, 12)}${bamboo(10, 12)}`,
+        
+        // 六條：2x3 排列
+        6: `${bamboo(-8, -16)}${bamboo(8, -16)}${bamboo(-8, 0)}${bamboo(8, 0)}${bamboo(-8, 16)}${bamboo(8, 16)}`,
+        
+        // 七條：六個竹節 + 中間紅竹節
+        7: `${bamboo(-8, -16)}${bamboo(8, -16)}${bamboo(-8, 0)}${bamboo(8, 0, true)}${bamboo(-8, 16)}${bamboo(8, 16)}`,
+        
+        // 八條：2x4 排列
+        8: `${bamboo(-8, -20)}${bamboo(8, -20)}${bamboo(-8, -7)}${bamboo(8, -7)}${bamboo(-8, 7)}${bamboo(8, 7)}${bamboo(-8, 20)}${bamboo(8, 20)}`,
+        
+        // 九條：三列，中間有紅竹節
+        9: `${bamboo(-12, -16)}${bamboo(0, -16)}${bamboo(12, -16)}${bamboo(-12, 0)}${bamboo(0, 0, true)}${bamboo(12, 0)}${bamboo(-12, 16)}${bamboo(0, 16)}${bamboo(12, 16)}`
+    };
+    
+    return patterns[num] || '';
 }
 
 // 生成所有筒子牌

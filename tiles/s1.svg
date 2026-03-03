@@ -15,8 +15,6 @@
   
   <!-- 牌面內容 -->
   <g transform="translate(30, 42)">
-    
-            <text x="0" y="8" font-size="32" text-anchor="middle" font-family="Arial, sans-serif">🐦</text>
-        
+    <g transform="scale(0.035)"><path d="M150,350 C100,300 50,250 30,200 C10,150 20,100 50,60 C80,20 130,0 180,10 C230,20 270,70 280,130 C290,190 260,250 210,280 C190,290 170,310 160,340 C150,370 170,400 200,400 L150,350 Z" fill="#e63946" stroke="#c1121f" stroke-width="4"/><circle cx="180" cy="120" r="12" fill="white"/><circle cx="185" cy="115" r="4" fill="black"/><path d="M230,150 L280,130 L230,170 Z" fill="#e63946"/><path d="M140,320 L110,370 L160,350 Z" fill="#e63946"/><path d="M180,320 L210,370 L160,350 Z" fill="#e63946"/></g>
   </g>
 </svg>

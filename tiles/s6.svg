@@ -15,8 +15,30 @@
   
   <!-- 牌面內容 -->
   <g transform="translate(30, 42)">
-    
-            <text x="0" y="8" font-size="20" font-weight="bold" fill="#2d5a3d" text-anchor="middle" font-family="Microsoft JhengHei, Arial, sans-serif">六條</text>
-        
+    <g transform="translate(-8,-16)">
+            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+        </g><g transform="translate(8,-16)">
+            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+        </g><g transform="translate(-8,0)">
+            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+        </g><g transform="translate(8,0)">
+            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+        </g><g transform="translate(-8,16)">
+            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+        </g><g transform="translate(8,16)">
+            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+        </g>
   </g>
 </svg>
