@@ -226,79 +226,116 @@
         }
 
         .tile {
-            width: 50px;
-            height: 70px;
-            background: linear-gradient(145deg, #fffcf0 0%, #f0e6c8 100%);
-            border-radius: 5px;
+            width: 55px;
+            height: 75px;
+            background: linear-gradient(145deg, #fffbf0 0%, #f5f0d8 50%, #e8e0c0 100%);
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 
-                2px 2px 4px rgba(0,0,0,0.3),
-                inset 1px 1px 2px rgba(255,255,255,0.8),
-                inset -1px -1px 2px rgba(0,0,0,0.1);
-            border: 1px solid #c4a574;
+                3px 3px 6px rgba(0,0,0,0.4),
+                inset 2px 2px 4px rgba(255,255,255,0.9),
+                inset -2px -2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #d4b896;
             position: relative;
+            overflow: hidden;
         }
 
+        /* 麻將牌邊框裝飾 */
         .tile::before {
             content: '';
             position: absolute;
-            top: 3px;
-            left: 3px;
-            right: 3px;
-            bottom: 3px;
-            border: 1px solid rgba(196, 165, 116, 0.4);
-            border-radius: 3px;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid rgba(212, 184, 150, 0.5);
+            border-radius: 4px;
+            pointer-events: none;
         }
 
         .tile .tile-content {
-            font-size: 1.8em;
-            line-height: 1;
             z-index: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            width: 100%;
+            height: 100%;
+            padding: 4px;
         }
 
-        .tile .tile-number {
-            font-size: 0.45em;
-            writing-mode: vertical-rl;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        /* 萬子 - 紅色 */
+        /* 萬子牌樣式 */
         .tile.wan .tile-content {
             color: #c41e3a;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
         }
 
-        /* 筒子 - 藍綠色 */
+        .tile.wan .wan-char {
+            font-size: 1.4em;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 1px;
+        }
+
+        .tile.wan .wan-num {
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        /* 筒子牌樣式 */
         .tile.tong .tile-content {
-            color: #1a5f7a;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            display: grid;
+            gap: 2px;
+            padding: 4px;
         }
 
-        /* 條子 - 綠色 */
+        .tile.tong .tong-circle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .tile.tong .tong-circle.red {
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c41e3a);
+            border: 1px solid #8b0000;
+        }
+
+        .tile.tong .tong-circle.blue {
+            background: radial-gradient(circle at 30% 30%, #4a90d9, #1a5f7a);
+            border: 1px solid #0d3d4d;
+        }
+
+        /* 條子牌樣式 */
         .tile.tiao .tile-content {
             color: #2d7a4f;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        .tile.tiao .tiao-char {
+            font-size: 1.4em;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+        }
+
+        .tile.tiao .tiao-bird {
+            font-size: 1.2em;
         }
 
         .tile:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             box-shadow: 
-                4px 4px 8px rgba(0,0,0,0.4),
-                inset 1px 1px 2px rgba(255,255,255,0.8);
+                5px 5px 10px rgba(0,0,0,0.5),
+                inset 2px 2px 4px rgba(255,255,255,0.9);
         }
 
         .tile.selected {
-            background: linear-gradient(145deg, #ffd700 0%, #ffb347 100%);
-            transform: translateY(-5px);
-            box-shadow: 0 0 15px rgba(255,215,0,0.5);
+            background: linear-gradient(145deg, #ffd700 0%, #ffc047 50%, #ffb347 100%);
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+            border-color: #ff8c00;
         }
 
         /* Options Buttons */
@@ -646,10 +683,18 @@
 
             <div class="timer-display" id="timer">00:00</div>
 
+            <!-- 題目區域 -->
+            <div class="section-title" style="text-align: center; font-size: 1.3em; color: #ffd700; margin: 20px 0 10px; font-weight: bold;">
+                🀄 題目：請看下面的手牌
+            </div>
             <div class="tiles-container" id="tiles-container"></div>
 
             <div id="feedback" class="feedback" style="display: none;"></div>
 
+            <!-- 答題區域 -->
+            <div class="section-title" style="text-align: center; font-size: 1.3em; color: #ffd700; margin: 20px 0 10px; font-weight: bold;">
+                ✍️ 答題：選擇你認為的聽牌
+            </div>
             <div class="options-container" id="options-container"></div>
 
             <div class="action-buttons">
@@ -995,19 +1040,32 @@
                     const tile = document.createElement('div');
                     tile.className = `tile ${this.currentPattern.suit}`;
                     
-                    // 使用真實麻將牌樣式
                     let content = '';
                     if (this.currentPattern.suit === 'wan') {
-                        // 萬子用中文數字豎排
+                        // 萬子：中文數字 + 萬
                         const wanChars = ['一','二','三','四','五','六','七','八','九'];
-                        content = `<span class="tile-number">${wanChars[num-1]}萬</span>`;
+                        content = `
+                            <div class="wan-char">
+                                <span class="wan-num">${wanChars[num-1]}</span>
+                                <span class="wan-num">萬</span>
+                            </div>
+                        `;
                     } else if (this.currentPattern.suit === 'tong') {
-                        // 筒子用圓圈圖案排列
+                        // 筒子：圓圈圖案
                         content = this.renderTongTiles(num);
                     } else if (this.currentPattern.suit === 'tiao') {
-                        // 條子用綠色數字 + 條符號
-                        const tiaoChars = ['一','二','三','四','五','六','七','八','九'];
-                        content = `<span class="tile-number" style="color:#2d7a4f">${tiaoChars[num-1]}條</span>`;
+                        // 條子：一條是鳥，其他是中文數字 + 條
+                        if (num === 1) {
+                            content = '<div class="tiao-bird">🐦</div>';
+                        } else {
+                            const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
+                            content = `
+                                <div class="tiao-char">
+                                    <span>${tiaoChars[num]}</span>
+                                    <span>條</span>
+                                </div>
+                            `;
+                        }
                     }
                     
                     tile.innerHTML = `<div class="tile-content">${content}</div>`;
@@ -1015,19 +1073,23 @@
                 });
             }
 
-            // 渲染筒子牌（圓圈圖案）
+            // 渲染筒子牌（圓圈圖案）- 模擬真實麻將牌排列
             renderTongTiles(num) {
-                // 筒子牌的圓圈排列方式（模擬真實麻將）
+                // 筒子牌的圓圈排列（1-9）
+                // 1,5,9 是紅色，其他是藍色
+                const isRed = [1, 5, 9].includes(num);
+                const circleClass = isRed ? 'red' : 'blue';
+                
                 const patterns = {
-                    1: '<span style="font-size:1.5em">🔴</span>',
-                    2: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:2px"><span style="font-size:1.2em">🔵</span><span style="font-size:1.2em">🔵</span></span>',
-                    3: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span></span>',
-                    4: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span></span>',
-                    5: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px;justify-items:center"><span style="font-size:0.9em">🔵</span><span style="font-size:0.9em">🔵</span><span style="font-size:1.2em">🔴</span><span style="font-size:0.9em">🔵</span><span style="font-size:0.9em">🔵</span></span>',
-                    6: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span></span>',
-                    7: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px;justify-items:center"><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span><span style="font-size:1em">🔴</span><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span></span>',
-                    8: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span></span>',
-                    9: '<span style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px"><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.8em">🔴</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span></span>'
+                    1: `<div style="display:flex;justify-content:center;align-items:center;height:100%"><div class="tong-circle red" style="width:24px;height:24px"></div></div>`,
+                    2: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
+                    3: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%;padding:4px"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue" style="grid-column:span 2"></div></div>`,
+                    4: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
+                    5: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle red" style="grid-column:span 2;justify-self:center"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
+                    6: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
+                    7: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle red" style="grid-column:span 2;justify-self:center"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
+                    8: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`,
+                    9: `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;justify-items:center;align-items:center;height:100%"><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle red" style="justify-self:center"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div><div class="tong-circle blue"></div></div>`
                 };
                 return patterns[num] || num;
             }
