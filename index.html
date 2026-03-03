@@ -1100,12 +1100,44 @@
                 const preview = document.getElementById('photo-preview');
                 
                 if (input.files && input.files[0]) {
+                    const file = input.files[0];
                     const reader = new FileReader();
+                    
                     reader.onload = (e) => {
-                        this.selectedPhoto = e.target.result; // base64
-                        preview.innerHTML = `<img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 10px; border: 3px solid #ffd700;">`;
+                        const img = new Image();
+                        img.onload = () => {
+                            // 壓縮圖片到合適大小
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            
+                            // 最大尺寸 300x300
+                            let width = img.width;
+                            let height = img.height;
+                            const maxSize = 300;
+                            
+                            if (width > height) {
+                                if (width > maxSize) {
+                                    height = (height * maxSize) / width;
+                                    width = maxSize;
+                                }
+                            } else {
+                                if (height > maxSize) {
+                                    width = (width * maxSize) / height;
+                                    height = maxSize;
+                                }
+                            }
+                            
+                            canvas.width = width;
+                            canvas.height = height;
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            // 壓縮為 JPEG，品質 0.7
+                            this.selectedPhoto = canvas.toDataURL('image/jpeg', 0.7);
+                            preview.innerHTML = `<img src="${this.selectedPhoto}" style="max-width: 200px; max-height: 200px; border-radius: 10px; border: 3px solid #ffd700;">`;
+                        };
+                        img.src = e.target.result;
                     };
-                    reader.readAsDataURL(input.files[0]);
+                    reader.readAsDataURL(file);
                 }
             }
 
@@ -1139,7 +1171,12 @@
                 if (isNewChampion && this.selectedPhoto) {
                     entry.photo = this.selectedPhoto;
                     // 儲存冠軍照片到 localStorage
-                    localStorage.setItem('mj_champion_photo', this.selectedPhoto);
+                    try {
+                        localStorage.setItem('mj_champion_photo', this.selectedPhoto);
+                    } catch (e) {
+                        console.error('儲存照片失敗:', e);
+                        alert('⚠️ 照片儲存失敗（可能檔案太大），將只儲存分數');
+                    }
                 }
 
                 leaderboard.push(entry);
@@ -1152,10 +1189,18 @@
 
                 // 只保留前三名
                 leaderboard.splice(3);
-                localStorage.setItem('mj_leaderboard', JSON.stringify(leaderboard));
+                
+                try {
+                    localStorage.setItem('mj_leaderboard', JSON.stringify(leaderboard));
+                } catch (e) {
+                    console.error('儲存排行榜失敗:', e);
+                    alert('⚠️ 儲存失敗：' + e.message);
+                    return;
+                }
 
                 this.closeModal();
                 this.renderLeaderboard('final-leaderboard-body');
+                this.renderChampionPortrait();
                 
                 alert('✅ 成績已儲存！');
             }
