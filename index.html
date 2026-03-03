@@ -39,6 +39,57 @@
             margin-bottom: 10px;
         }
 
+        /* Champion Portrait */
+        .champion-portrait {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .champion-frame {
+            display: inline-block;
+            position: relative;
+            background: linear-gradient(145deg, #ffd700 0%, #ffb347 100%);
+            padding: 8px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+
+        .champion-photo {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 3px solid #1a472a;
+            background: #fff;
+        }
+
+        .champion-info {
+            margin-top: 15px;
+        }
+
+        .champion-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .champion-score {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .champion-badge {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .no-champion {
+            opacity: 0.6;
+            font-style: italic;
+        }
+
         .game-info {
             display: flex;
             justify-content: space-around;
@@ -413,6 +464,21 @@
                     </ul>
                 </div>
 
+                <!-- Champion Portrait -->
+                <div class="champion-portrait" id="champion-portrait">
+                    <div class="champion-frame">
+                        <img id="champion-photo" class="champion-photo" src="" alt="冠軍照片" style="display: none;">
+                        <div id="champion-placeholder" class="champion-placeholder">
+                            <div class="champion-badge">👑</div>
+                            <div class="no-champion">暫無冠軍</div>
+                        </div>
+                    </div>
+                    <div class="champion-info" id="champion-info" style="display: none;">
+                        <div class="champion-name" id="champion-name"></div>
+                        <div class="champion-score" id="champion-score"></div>
+                    </div>
+                </div>
+
                 <div class="leaderboard" id="start-leaderboard">
                     <h3>🏆 排行榜</h3>
                     <table id="leaderboard-table">
@@ -519,7 +585,13 @@
         <div class="modal-content">
             <h2>🎉 恭喜完成！</h2>
             <p style="font-size: 1.2em; margin: 20px 0;">你的分數：<span id="modal-score" style="color: #ffd700; font-weight: bold;"></span></p>
+            <p id="champion-upload-prompt" style="font-size: 1em; color: #ffd700; margin: 15px 0; display: none;">🏆 你是第一名！上傳一張冠軍照片吧！</p>
             <input type="text" id="player-name" placeholder="輸入你的姓名" maxlength="20">
+            <div id="photo-upload-section" style="margin: 20px 0; display: none;">
+                <input type="file" id="champion-photo-input" accept="image/*" style="display: none;" onchange="game.previewPhoto()">
+                <button class="btn btn-secondary" onclick="document.getElementById('champion-photo-input').click()" style="font-size: 0.9em; padding: 10px 20px;">📷 選擇照片</button>
+                <div id="photo-preview" style="margin-top: 15px;"></div>
+            </div>
             <div class="action-buttons">
                 <button class="btn btn-primary" onclick="game.saveScore()">💾 儲存成績</button>
                 <button class="btn btn-secondary" onclick="game.closeModal()">❌ 取消</button>
@@ -864,12 +936,45 @@
 
             showNameInput() {
                 document.getElementById('modal-score').textContent = this.score;
+                
+                // 檢查是否是第一名
+                const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+                const isNewChampion = leaderboard.length === 0 || this.score > (leaderboard[0]?.score || 0);
+                
+                const promptEl = document.getElementById('champion-upload-prompt');
+                const photoSection = document.getElementById('photo-upload-section');
+                
+                if (isNewChampion) {
+                    promptEl.style.display = 'block';
+                    photoSection.style.display = 'block';
+                } else {
+                    promptEl.style.display = 'none';
+                    photoSection.style.display = 'none';
+                }
+                
                 document.getElementById('name-modal').classList.add('active');
                 document.getElementById('player-name').focus();
             }
 
+            previewPhoto() {
+                const input = document.getElementById('champion-photo-input');
+                const preview = document.getElementById('photo-preview');
+                
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.selectedPhoto = e.target.result; // base64
+                        preview.innerHTML = `<img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 10px; border: 3px solid #ffd700;">`;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
             closeModal() {
                 document.getElementById('name-modal').classList.remove('active');
+                this.selectedPhoto = null;
+                document.getElementById('champion-photo-input').value = '';
+                document.getElementById('photo-preview').innerHTML = '';
             }
 
             saveScore() {
@@ -879,13 +984,26 @@
                 const timeStr = `${mins}:${secs}`;
 
                 const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
-                leaderboard.push({
+                
+                // 檢查是否是第一名
+                const isNewChampion = leaderboard.length === 0 || this.score > (leaderboard[0]?.score || 0);
+                
+                const entry = {
                     name: name,
                     score: this.score,
                     time: this.totalTime,
                     timeStr: timeStr,
                     date: new Date().toLocaleString('zh-TW')
-                });
+                };
+                
+                // 如果是第一名且有照片，儲存照片
+                if (isNewChampion && this.selectedPhoto) {
+                    entry.photo = this.selectedPhoto;
+                    // 儲存冠軍照片到 localStorage
+                    localStorage.setItem('mj_champion_photo', this.selectedPhoto);
+                }
+
+                leaderboard.push(entry);
 
                 // 排序：分數高者在前，同分則時間短者在前
                 leaderboard.sort((a, b) => {
@@ -926,6 +1044,32 @@
             restart() {
                 this.showScreen('start-screen');
                 this.renderLeaderboard('leaderboard-body');
+                this.renderChampionPortrait();
+            }
+
+            renderChampionPortrait() {
+                const championPhoto = localStorage.getItem('mj_champion_photo');
+                const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+                
+                const photoEl = document.getElementById('champion-photo');
+                const placeholderEl = document.getElementById('champion-placeholder');
+                const infoEl = document.getElementById('champion-info');
+                const nameEl = document.getElementById('champion-name');
+                const scoreEl = document.getElementById('champion-score');
+                
+                if (championPhoto && leaderboard.length > 0) {
+                    const champion = leaderboard[0];
+                    photoEl.src = championPhoto;
+                    photoEl.style.display = 'block';
+                    placeholderEl.style.display = 'none';
+                    nameEl.textContent = `🏆 ${champion.name}`;
+                    scoreEl.textContent = `${champion.score} 分 | ${champion.timeStr}`;
+                    infoEl.style.display = 'block';
+                } else {
+                    photoEl.style.display = 'none';
+                    placeholderEl.style.display = 'block';
+                    infoEl.style.display = 'none';
+                }
             }
 
             showScreen(screenId) {
@@ -937,9 +1081,10 @@
         // 初始化遊戲
         const game = new MahjongGame();
 
-        // 載入時顯示排行榜
+        // 載入時顯示排行榜和冠軍肖像
         document.addEventListener('DOMContentLoaded', () => {
             game.renderLeaderboard('leaderboard-body');
+            game.renderChampionPortrait();
         });
 
         // Enter 鍵提交姓名
