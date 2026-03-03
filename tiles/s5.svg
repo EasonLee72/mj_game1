@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="84" viewBox="0 0 60 84">
+  <defs>
+    <linearGradient id="tileBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fefefe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5f0e6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 牌面背景 -->
+  <rect x="1" y="1" width="58" height="82" rx="5" fill="url(#tileBg)" stroke="#d4c4a8" stroke-width="1.5"/>
+  
+  <!-- 內邊框 -->
+  <rect x="4" y="4" width="52" height="76" rx="3" fill="none" stroke="#c9b896" stroke-width="0.5" opacity="0.5"/>
+  
+  <!-- 牌面內容 -->
+  <g transform="translate(30, 42)">
+    
+            <text x="0" y="5" font-size="16" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">五</text>
+            <text x="0" y="25" font-size="16" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">條</text>
+        
+  </g>
+</svg>
