@@ -958,32 +958,27 @@
                     const tile = document.createElement('div');
                     tile.className = 'tile';
                     
-                    const img = document.createElement('img');
+                    const content = document.createElement('div');
+                    content.className = 'tile-content';
                     
-                    // 使用真實麻將牌圖片
-                    // 萬子：m1-m9, 筒子：p1-p9, 條子：s1-s9
-                    let suitPrefix = '';
-                    if (this.currentPattern.suit === 'wan') suitPrefix = 'm';
-                    else if (this.currentPattern.suit === 'tong') suitPrefix = 'p';
-                    else if (this.currentPattern.suit === 'tiao') suitPrefix = 's';
+                    if (this.currentPattern.suit === 'wan') {
+                        // 萬子：中文數字豎排
+                        const wanChars = ['一','二','三','四','五','六','七','八','九'];
+                        content.innerHTML = `<div class="wan-text">${wanChars[num-1]}萬</div>`;
+                    } else if (this.currentPattern.suit === 'tong') {
+                        // 筒子：圓圈圖案（按照真實麻將排列）
+                        content.innerHTML = this.renderTongTiles(num);
+                    } else if (this.currentPattern.suit === 'tiao') {
+                        // 條子：一條是鳥，其他是中文數字
+                        if (num === 1) {
+                            content.innerHTML = '<div class="tiao-bird">🐦</div>';
+                        } else {
+                            const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
+                            content.innerHTML = `<div class="tiao-text">${tiaoChars[num]}條</div>`;
+                        }
+                    }
                     
-                    // 使用開源麻將牌圖片資源
-                    img.src = `https://yorkshire-pudding.net/mahjong/tiles/${suitPrefix}${num}.png`;
-                    img.alt = `${this.currentPattern.suit}${num}`;
-                    
-                    // 如果載入失敗，使用備用顯示
-                    img.onerror = () => {
-                        img.style.display = 'none';
-                        tile.style.display = 'flex';
-                        tile.style.justifyContent = 'center';
-                        tile.style.alignItems = 'center';
-                        tile.style.fontSize = '14px';
-                        tile.style.color = '#666';
-                        const suitNames = { wan: '萬', tong: '筒', tiao: '條' };
-                        tile.textContent = `${suitNames[this.currentPattern.suit]}${num}`;
-                    };
-                    
-                    tile.appendChild(img);
+                    tile.appendChild(content);
                     container.appendChild(tile);
                 });
             }
