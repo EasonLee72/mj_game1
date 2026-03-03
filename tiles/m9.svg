@@ -16,8 +16,8 @@
   <!-- 牌面內容 -->
   <g transform="translate(30, 42)">
     
-        <text x="0" y="5" font-size="16" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">九</text>
-        <text x="0" y="25" font-size="16" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">萬</text>
+        <text x="0" y="-5" font-size="18" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">九</text>
+        <text x="0" y="20" font-size="18" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">萬</text>
     
   </g>
 </svg>

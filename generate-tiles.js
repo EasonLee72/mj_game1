@@ -132,8 +132,8 @@ function generateTongCircles(num) {
 function generateWanText(num) {
     const wanChars = ['一','二','三','四','五','六','七','八','九'];
     return `
-        <text x="0" y="5" font-size="16" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">${wanChars[num-1]}</text>
-        <text x="0" y="25" font-size="16" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">萬</text>
+        <text x="0" y="-5" font-size="18" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">${wanChars[num-1]}</text>
+        <text x="0" y="20" font-size="18" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">萬</text>
     `;
 }
 
@@ -147,8 +147,8 @@ function generateTiaoText(num) {
     } else {
         const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
         return `
-            <text x="0" y="5" font-size="16" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">${tiaoChars[num]}</text>
-            <text x="0" y="25" font-size="16" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Arial, sans-serif">條</text>
+            <text x="0" y="-5" font-size="18" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">${tiaoChars[num]}</text>
+            <text x="0" y="20" font-size="18" font-weight="bold" fill="#2d7a4f" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">條</text>
         `;
     }
 }
