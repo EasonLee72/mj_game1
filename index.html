@@ -226,49 +226,80 @@
         }
 
         .tile {
-            width: 60px;
-            height: 80px;
-            background: linear-gradient(145deg, #fffef0 0%, #f0e6d2 100%);
-            border-radius: 8px;
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(145deg, #fffcf0 0%, #f0e6c8 100%);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 
+                2px 2px 4px rgba(0,0,0,0.3),
+                inset 1px 1px 2px rgba(255,255,255,0.8),
+                inset -1px -1px 2px rgba(0,0,0,0.1);
+            border: 1px solid #c4a574;
+            position: relative;
+        }
+
+        .tile::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            border: 1px solid rgba(196, 165, 116, 0.4);
+            border-radius: 3px;
+        }
+
+        .tile .tile-content {
+            font-size: 1.8em;
+            line-height: 1;
+            z-index: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 2em;
             font-weight: bold;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), 
-                        inset 2px 2px 4px rgba(255,255,255,0.8);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 2px solid #d4a574;
-            position: relative;
+        }
+
+        .tile .tile-number {
+            font-size: 0.45em;
+            writing-mode: vertical-rl;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* 萬子 - 紅色 */
+        .tile.wan .tile-content {
+            color: #c41e3a;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        /* 筒子 - 藍綠色 */
+        .tile.tong .tile-content {
+            color: #1a5f7a;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        /* 條子 - 綠色 */
+        .tile.tiao .tile-content {
+            color: #2d7a4f;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
         }
 
         .tile:hover {
-            transform: translateY(-5px);
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            transform: translateY(-3px);
+            box-shadow: 
+                4px 4px 8px rgba(0,0,0,0.4),
+                inset 1px 1px 2px rgba(255,255,255,0.8);
         }
 
         .tile.selected {
             background: linear-gradient(145deg, #ffd700 0%, #ffb347 100%);
-            transform: translateY(-8px);
-            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(255,215,0,0.5);
         }
-
-        .tile .number {
-            color: #c41e3a;
-            font-size: 1.2em;
-        }
-
-        .tile .suit {
-            font-size: 0.6em;
-            color: #1a472a;
-            margin-top: 5px;
-        }
-
-        .tile.wan .number { color: #c41e3a; }
-        .tile.tong .number { color: #1a472a; }
-        .tile.tiao .number { color: #1a472a; }
 
         /* Options Buttons */
         .options-container {
@@ -661,7 +692,9 @@
 
                 <div class="action-buttons">
                     <button class="btn btn-primary" onclick="game.showNameInput()">📝 上傳成績</button>
+                    <button class="btn btn-secondary" onclick="game.showChampionReview()">👁️ 回顧冠軍照片</button>
                     <button class="btn btn-secondary" onclick="game.restart()">🔄 再玩一次</button>
+                    <button class="btn btn-primary" onclick="game.goHome()" style="background: linear-gradient(145deg, #4CAF50 0%, #2d5a3d 100%); color: white;">🏠 回首頁</button>
                 </div>
             </div>
         </div>
@@ -958,16 +991,45 @@
                 const container = document.getElementById('tiles-container');
                 container.innerHTML = '';
 
-                const suit = SUITS[this.currentPattern.suit];
                 this.currentPattern.tiles.forEach(num => {
                     const tile = document.createElement('div');
                     tile.className = `tile ${this.currentPattern.suit}`;
-                    tile.innerHTML = `
-                        <div class="number">${this.getNumberDisplay(num)}</div>
-                        <div class="suit">${suit.name}</div>
-                    `;
+                    
+                    // 使用真實麻將牌樣式
+                    let content = '';
+                    if (this.currentPattern.suit === 'wan') {
+                        // 萬子用中文數字豎排
+                        const wanChars = ['一','二','三','四','五','六','七','八','九'];
+                        content = `<span class="tile-number">${wanChars[num-1]}萬</span>`;
+                    } else if (this.currentPattern.suit === 'tong') {
+                        // 筒子用圓圈圖案排列
+                        content = this.renderTongTiles(num);
+                    } else if (this.currentPattern.suit === 'tiao') {
+                        // 條子用綠色數字 + 條符號
+                        const tiaoChars = ['一','二','三','四','五','六','七','八','九'];
+                        content = `<span class="tile-number" style="color:#2d7a4f">${tiaoChars[num-1]}條</span>`;
+                    }
+                    
+                    tile.innerHTML = `<div class="tile-content">${content}</div>`;
                     container.appendChild(tile);
                 });
+            }
+
+            // 渲染筒子牌（圓圈圖案）
+            renderTongTiles(num) {
+                // 筒子牌的圓圈排列方式（模擬真實麻將）
+                const patterns = {
+                    1: '<span style="font-size:1.5em">🔴</span>',
+                    2: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:2px"><span style="font-size:1.2em">🔵</span><span style="font-size:1.2em">🔵</span></span>',
+                    3: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span></span>',
+                    4: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span><span style="font-size:1em">🔵</span></span>',
+                    5: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px;justify-items:center"><span style="font-size:0.9em">🔵</span><span style="font-size:0.9em">🔵</span><span style="font-size:1.2em">🔴</span><span style="font-size:0.9em">🔵</span><span style="font-size:0.9em">🔵</span></span>',
+                    6: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span><span style="font-size:0.85em">🔵</span></span>',
+                    7: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px;justify-items:center"><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span><span style="font-size:1em">🔴</span><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span><span style="font-size:0.75em">🔵</span></span>',
+                    8: '<span style="display:grid;grid-template-columns:1fr 1fr;gap:1px"><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span><span style="font-size:0.7em">🔵</span></span>',
+                    9: '<span style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px"><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.8em">🔴</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span><span style="font-size:0.65em">🔵</span></span>'
+                };
+                return patterns[num] || num;
             }
 
             getNumberDisplay(num) {
@@ -1159,6 +1221,14 @@
                 // 檢查是否是第一名
                 const isNewChampion = leaderboard.length === 0 || this.score > (leaderboard[0]?.score || 0);
                 
+                // 如果是第一名但沒有上傳照片，提醒用戶
+                if (isNewChampion && !this.selectedPhoto) {
+                    if (!confirm('⚠️ 你是第一名但還沒有上傳照片哦！\n\n確定要使用黑影人形作為冠軍頭像嗎？\n（也可以按取消回去上傳照片）')) {
+                        return; // 取消，讓用戶回去上傳照片
+                    }
+                    // 用戶確認使用黑影人形
+                }
+                
                 const entry = {
                     name: name,
                     score: this.score,
@@ -1177,6 +1247,9 @@
                         console.error('儲存照片失敗:', e);
                         alert('⚠️ 照片儲存失敗（可能檔案太大），將只儲存分數');
                     }
+                } else if (isNewChampion && !this.selectedPhoto) {
+                    // 儲存黑影人形作為冠軍頭像
+                    localStorage.removeItem('mj_champion_photo'); // 清除舊照片，使用預設黑影
                 }
 
                 leaderboard.push(entry);
@@ -1226,9 +1299,50 @@
             }
 
             restart() {
+                this.showScreen('game-screen');
+                this.start();
+            }
+
+            goHome() {
                 this.showScreen('start-screen');
                 this.renderLeaderboard('leaderboard-body');
                 this.renderChampionPortrait();
+            }
+
+            showChampionReview() {
+                const championPhoto = localStorage.getItem('mj_champion_photo');
+                const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+                
+                if (leaderboard.length === 0) {
+                    alert('📭 目前還沒有排行榜記錄哦！先玩一局吧！');
+                    return;
+                }
+                
+                const champion = leaderboard[0];
+                
+                // 創建回顧模態框
+                const modal = document.createElement('div');
+                modal.id = 'champion-review-modal';
+                modal.className = 'modal active';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h2>🏆 冠軍風采</h2>
+                        ${championPhoto ? 
+                            `<img src="${championPhoto}" style="width:200px;height:200px;object-fit:cover;border-radius:15px;border:4px solid #ffd700;margin:20px 0;">` :
+                            `<div style="width:200px;height:200px;margin:20px auto;background:#f0f0f0;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:3em;">👤</div>`
+                        }
+                        <div style="font-size:1.5em;color:#ffd700;margin:15px 0;">${champion.name}</div>
+                        <div style="font-size:1.2em;">分數：${champion.score} | 時間：${champion.timeStr}</div>
+                        <div style="font-size:0.9em;opacity:0.7;margin-top:10px;">${champion.date}</div>
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()" style="margin-top:20px;">關閉</button>
+                    </div>
+                `;
+                
+                modal.onclick = (e) => {
+                    if (e.target === modal) modal.remove();
+                };
+                
+                document.body.appendChild(modal);
             }
 
             clearLeaderboard() {
