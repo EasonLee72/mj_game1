@@ -528,62 +528,153 @@
     </div>
 
     <script>
-        // 麻將牌定義
+        // 麻將牌定義 - 每種花色只有 1-9
         const SUITS = {
-            wan: { name: '萬', symbols: ['🀇','🀈','🀉','🀊','🀋','🀌','🀍','🀎','🀏'] },
+            wan: { name: '萬', symbols: ['🀇','','🀉','','🀋','','🀍','','🀏'] },
             tong: { name: '筒', symbols: ['🀙','🀚','🀛','🀜','🀝','🀞','🀟','🀠','🀡'] },
-            tiao: { name: '條', symbols: ['🀐','🀑','🀒','🀓','🀔','🀕','🀖','🀗','🀘'] }
+            tiao: { name: '條', symbols: ['🀐','🀑','🀒','🀓','🀔','🀕','🀖','🀗',''] }
         };
 
-        // 根據維基學院權威資料建立的正確聽牌牌型庫
-        // 所有牌型都嚴格遵守每種牌最多4張的規則
-        const AUTHORIZED_PATTERNS = [
-            // 萬子牌型
-            { tiles: [1,1,2,2,2,3,3,3,4,5,6,7,8,9,10,12], listen: [11,12], suit: 'wan' },
-            { tiles: [1,1,1,2,3,3,4,4,5,6,6,6,7,7,8,8], listen: [2,3,5,6,7,8,9], suit: 'wan' },
-            { tiles: [2,2,3,3,3,4,4,4,5,6,7,8,9,9,10,10], listen: [8,9,10,11], suit: 'wan' },
-            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,9,9], listen: [1,4,7,9], suit: 'wan' },
-            { tiles: [1,1,2,2,2,3,3,3,4,5,5,6,6,7,8,9], listen: [4,5,6,7,10], suit: 'wan' },
-            { tiles: [2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7], listen: [2,3,4,5,6,7], suit: 'wan' },
-            { tiles: [2,2,2,3,3,3,4,5,6,7,7,7,8,8,9,9], listen: [2,3,4,5,7,8,9,10], suit: 'wan' },
-            { tiles: [1,1,2,2,3,3,4,4,6,6,7,7,8,8,9,9], listen: [1,4,6,9], suit: 'wan' },
-            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8], listen: [1,2,4,5,7,8], suit: 'wan' },
-            { tiles: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,6,7], listen: [0,2,3,4,5,6,8], suit: 'wan' },
-            { tiles: [5,5,5,6,7,8,9,9,9,10,10,10,11,11,12,12], listen: [4,7,10,13], suit: 'wan' },
-            { tiles: [1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,15], listen: [14,15], suit: 'wan' },
-            { tiles: [2,2,2,3,4,5,6,7,8,9,10,11,12,13,14,16], listen: [15,16], suit: 'wan' },
-            { tiles: [1,1,2,2,2,3,3,3,4,6,7,8,9,11,11,11], listen: [5,6,9,10], suit: 'wan' },
-            { tiles: [1,1,1,2,3,5,5,6,6,7,7,8,8,8,9,10], listen: [1,4,5,8,11], suit: 'wan' },
-            { tiles: [2,2,2,3,4,6,6,6,7,8,9,10,11,12,13,14], listen: [2,5,6,9,12,15], suit: 'wan' },
-            { tiles: [1,1,2,2,3,3,4,4,5,5,5,6,7,8,9,10], listen: [1,2,4,5,8,11], suit: 'wan' },
-            { tiles: [1,1,1,2,3,4,5,5,6,6,7,7,8,8,9,9], listen: [4,5,6,7,8,9,10], suit: 'wan' },
-            { tiles: [2,2,3,3,4,4,5,5,6,6,6,7,8,9,10,11], listen: [2,3,5,6,9,12], suit: 'wan' },
-            { tiles: [1,1,1,3,3,3,4,4,5,5,6,6,7,7,8,8], listen: [2,3,4,5,6,7,8,9], suit: 'wan' },
+        // 聽牌檢查器 - 台灣麻將 16 張牌規則
+        class ListeningChecker {
+            constructor() {
+                this.tiles = [];
+            }
+
+            // 檢查是否為有效的聽牌牌型（16 張）
+            checkListening(tiles, suit) {
+                const counts = {};
+                for (let i = 1; i <= 9; i++) counts[i] = 0;
+                tiles.forEach(t => counts[t]++);
+
+                // 每張牌最多 4 張
+                for (let i = 1; i <= 9; i++) {
+                    if (counts[i] > 4) return [];
+                }
+
+                const listening = [];
+                for (let test = 1; test <= 9; test++) {
+                    if (counts[test] >= 4) continue; // 這張牌已經 4 張了，不能聽
+
+                    // 假設摸到 test，檢查是否能胡牌
+                    const testTiles = [...tiles, test];
+                    if (this.canWin(testTiles)) {
+                        listening.push(test);
+                    }
+                }
+                return listening;
+            }
+
+            // 檢查 17 張牌是否能胡牌（4 組 + 1 對）
+            canWin(tiles) {
+                const counts = {};
+                for (let i = 1; i <= 9; i++) counts[i] = 0;
+                tiles.forEach(t => counts[t]++);
+
+                // 嘗試每種可能的雀頭（對子）
+                for (let pair = 1; pair <= 9; pair++) {
+                    if (counts[pair] >= 2) {
+                        counts[pair] -= 2;
+                        if (this.canFormSets(counts)) {
+                            counts[pair] += 2;
+                            return true;
+                        }
+                        counts[pair] += 2;
+                    }
+                }
+                return false;
+            }
+
+            // 檢查是否能組成 4 組面子（刻子或順子）
+            canFormSets(counts) {
+                const total = Object.values(counts).reduce((a, b) => a + b, 0);
+                if (total === 0) return true;
+
+                // 找第一個有牌的數字
+                let first = -1;
+                for (let i = 1; i <= 9; i++) {
+                    if (counts[i] > 0) {
+                        first = i;
+                        break;
+                    }
+                }
+
+                // 優先嘗試刻子
+                if (counts[first] >= 3) {
+                    counts[first] -= 3;
+                    if (this.canFormSets(counts)) {
+                        counts[first] += 3;
+                        return true;
+                    }
+                    counts[first] += 3;
+                }
+
+                // 嘗試順子
+                if (first <= 7 && counts[first] >= 1 && counts[first + 1] >= 1 && counts[first + 2] >= 1) {
+                    counts[first]--;
+                    counts[first + 1]--;
+                    counts[first + 2]--;
+                    if (this.canFormSets(counts)) {
+                        counts[first]++;
+                        counts[first + 1]++;
+                        counts[first + 2]++;
+                        return true;
+                    }
+                    counts[first]++;
+                    counts[first + 1]++;
+                    counts[first + 2]++;
+                }
+
+                return false;
+            }
+        }
+
+        // 預定義的有效聽牌牌型（16 張，每張牌 1-9）
+        const VALID_PATTERNS = [
+            // 簡單牌型 - 聽單吊
+            { base: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,6], suit: 'wan' },
+            { base: [2,2,2,3,3,3,4,4,4,5,5,5,6,6,7], suit: 'wan' },
+            { base: [1,1,1,2,3,4,5,6,7,8,9,9,9,9,9], suit: 'wan' },
+            { base: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8], suit: 'wan' },
+            { base: [1,1,1,2,2,3,3,4,4,5,5,6,6,7,7], suit: 'wan' },
             
-            // 筒子牌型
-            { tiles: [1,1,2,2,2,3,3,3,4,5,6,7,8,9,10,12], listen: [11,12], suit: 'tong' },
-            { tiles: [1,1,1,2,3,3,4,4,5,6,6,6,7,7,8,8], listen: [2,3,5,6,7,8,9], suit: 'tong' },
-            { tiles: [2,2,3,3,3,4,4,4,5,6,7,8,9,9,10,10], listen: [8,9,10,11], suit: 'tong' },
-            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,9,9], listen: [1,4,7,9], suit: 'tong' },
-            { tiles: [1,1,2,2,2,3,3,3,4,5,5,6,6,7,8,9], listen: [4,5,6,7,10], suit: 'tong' },
-            { tiles: [2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7], listen: [2,3,4,5,6,7], suit: 'tong' },
-            { tiles: [2,2,2,3,3,3,4,5,6,7,7,7,8,8,9,9], listen: [2,3,4,5,7,8,9,10], suit: 'tong' },
-            { tiles: [1,1,2,2,3,3,4,4,6,6,7,7,8,8,9,9], listen: [1,4,6,9], suit: 'tong' },
-            { tiles: [5,5,5,6,7,8,9,9,9,10,10,10,11,11,12,12], listen: [4,7,10,13], suit: 'tong' },
-            { tiles: [1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,15], listen: [14,15], suit: 'tong' },
+            // 聽兩面
+            { base: [1,1,1,2,3,4,5,6,7,8,8,8,9,9,9], suit: 'wan' },
+            { base: [1,1,2,2,3,3,4,4,5,5,6,6,7,8,9], suit: 'wan' },
+            { base: [1,1,1,2,2,3,3,4,4,5,5,6,6,7,8], suit: 'wan' },
             
-            // 條子牌型
-            { tiles: [1,1,2,2,2,3,3,3,4,5,6,7,8,9,10,12], listen: [11,12], suit: 'tiao' },
-            { tiles: [1,1,1,2,3,3,4,4,5,6,6,6,7,7,8,8], listen: [2,3,5,6,7,8,9], suit: 'tiao' },
-            { tiles: [2,2,3,3,3,4,4,4,5,6,7,8,9,9,10,10], listen: [8,9,10,11], suit: 'tiao' },
-            { tiles: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,9,9], listen: [1,4,7,9], suit: 'tiao' },
-            { tiles: [1,1,2,2,2,3,3,3,4,5,5,6,6,7,8,9], listen: [4,5,6,7,10], suit: 'tiao' },
-            { tiles: [2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7], listen: [2,3,4,5,6,7], suit: 'tiao' },
-            { tiles: [2,2,2,3,3,3,4,5,6,7,7,7,8,8,9,9], listen: [2,3,4,5,7,8,9,10], suit: 'tiao' },
-            { tiles: [1,1,2,2,3,3,4,4,6,6,7,7,8,8,9,9], listen: [1,4,6,9], suit: 'tiao' },
-            { tiles: [5,5,5,6,7,8,9,9,9,10,10,10,11,11,12,12], listen: [4,7,10,13], suit: 'tiao' },
-            { tiles: [1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,15], listen: [14,15], suit: 'tiao' }
+            // 聽多張
+            { base: [1,1,2,2,3,3,4,4,5,5,6,6,7,8,9], suit: 'wan' },
+            { base: [1,1,1,2,2,2,3,3,3,4,5,6,7,8,9], suit: 'wan' },
+            { base: [1,2,3,4,5,6,7,8,9,9,9,9,9,9,9], suit: 'wan' },
+            { base: [1,1,1,2,2,2,3,3,3,4,4,4,5,6,7], suit: 'wan' },
+            { base: [1,1,2,3,4,5,6,7,8,9,9,9,9,9,9], suit: 'wan' },
+            { base: [1,1,1,2,2,3,3,4,4,5,5,6,6,7,8], suit: 'wan' },
+            { base: [1,1,2,2,2,3,3,3,4,4,4,5,5,6,7], suit: 'wan' },
         ];
+
+        // 生成隨機牌型
+        function generateRandomPattern() {
+            const suits = ['wan', 'tong', 'tiao'];
+            const suit = suits[Math.floor(Math.random() * suits.length)];
+            
+            // 隨機生成 16 張牌（每張 1-9，每種最多 4 張）
+            const counts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
+            const tiles = [];
+            
+            while (tiles.length < 16) {
+                const num = Math.floor(Math.random() * 9) + 1;
+                if (counts[num] < 4) {
+                    counts[num]++;
+                    tiles.push(num);
+                }
+            }
+            
+            tiles.sort((a, b) => a - b);
+            return { tiles, suit };
+        }
+
+        const checker = new ListeningChecker();
 
         class MahjongGame {
             constructor() {
@@ -627,17 +718,25 @@
                 document.getElementById('submit-btn').disabled = true;
                 document.getElementById('next-btn').style.display = 'none';
 
-                // 選擇未使用的牌型
-                const available = AUTHORIZED_PATTERNS.filter((_, i) => !this.usedPatterns.includes(i));
-                if (available.length === 0) {
-                    // 如果用完了就重置
-                    this.usedPatterns = [];
-                    return this.nextRound();
+                // 生成有效的聽牌牌型
+                let pattern;
+                let listening;
+                let attempts = 0;
+                do {
+                    pattern = generateRandomPattern();
+                    listening = checker.checkListening(pattern.tiles, pattern.suit);
+                    attempts++;
+                } while ((listening.length === 0 || listening.length > 4) && attempts < 100);
+
+                // 如果找不到合適的，使用預定義牌型
+                if (listening.length === 0 || listening.length > 4) {
+                    const preset = VALID_PATTERNS[Math.floor(Math.random() * VALID_PATTERNS.length)];
+                    pattern = { tiles: [...preset.base], suit: preset.suit };
+                    listening = checker.checkListening(pattern.tiles, pattern.suit);
                 }
-                const patternIndex = Math.floor(Math.random() * available.length);
-                const originalIndex = AUTHORIZED_PATTERNS.indexOf(available[patternIndex]);
-                this.usedPatterns.push(originalIndex);
-                this.currentPattern = JSON.parse(JSON.stringify(available[patternIndex]));
+
+                this.currentPattern = { ...pattern, listening };
+                console.log('Round', this.round, 'Tiles:', pattern.tiles, 'Listening:', listening);
 
                 this.renderTiles();
                 this.renderOptions();
@@ -717,7 +816,7 @@
 
             submitAnswer() {
                 const roundTime = this.stopTimer();
-                const correct = this.currentPattern.listen.filter(x => x >= 1 && x <= 9).sort((a,b) => a-b);
+                const correct = this.currentPattern.listening.sort((a,b) => a-b);
                 const selected = this.selectedOptions.sort((a,b) => a-b);
                 const isCorrect = JSON.stringify(correct) === JSON.stringify(selected);
 
@@ -726,7 +825,7 @@
                 
                 if (isCorrect) {
                     this.correctCount++;
-                    // 分數計算：基礎 100 分 + 時間bonus（60 秒內完成）
+                    // 分數計算：基礎 100 分 + 時間 bonus（60 秒內完成）
                     const timeBonus = Math.max(0, 60 - roundTime) * 2;
                     const roundScore = 100 + timeBonus;
                     this.score += roundScore;
@@ -813,7 +912,7 @@
                     return;
                 }
 
-                const medals = ['🥇','🥈','🥉'];
+                const medals = ['🥇','','🥉'];
                 tbody.innerHTML = leaderboard.map((entry, i) => `
                     <tr>
                         <td>${medals[i] || (i+1)}</td>
