@@ -138,9 +138,9 @@ function generateTiaoText(num) {
         const color = red ? '#e63946' : '#2d5a3d';
         const stroke = red ? '#c1121f' : '#1a3d2a';
         return `<g transform="translate(${x},${y})">
-            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="${color}" stroke="${stroke}" stroke-width="0.5"/>
-            <ellipse cx="0" cy="0" rx="3" ry="7" fill="${color}" stroke="${stroke}" stroke-width="0.5"/>
-            <ellipse cx="0" cy="6" rx="3" ry="7" fill="${color}" stroke="${stroke}" stroke-width="0.5"/>
+            <ellipse cx="0" cy="-10" rx="5" ry="12" fill="${color}" stroke="${stroke}" stroke-width="1.2"/>
+            <ellipse cx="0" cy="0" rx="5" ry="12" fill="${color}" stroke="${stroke}" stroke-width="1.2"/>
+            <ellipse cx="0" cy="10" rx="5" ry="12" fill="${color}" stroke="${stroke}" stroke-width="1.2"/>
         </g>`;
     };
     
@@ -149,28 +149,28 @@ function generateTiaoText(num) {
         1: `<g transform="scale(0.035)"><path d="M150,350 C100,300 50,250 30,200 C10,150 20,100 50,60 C80,20 130,0 180,10 C230,20 270,70 280,130 C290,190 260,250 210,280 C190,290 170,310 160,340 C150,370 170,400 200,400 L150,350 Z" fill="#e63946" stroke="#c1121f" stroke-width="4"/><circle cx="180" cy="120" r="12" fill="white"/><circle cx="185" cy="115" r="4" fill="black"/><path d="M230,150 L280,130 L230,170 Z" fill="#e63946"/><path d="M140,320 L110,370 L160,350 Z" fill="#e63946"/><path d="M180,320 L210,370 L160,350 Z" fill="#e63946"/></g>`,
         
         // 二條：兩個竹節直排
-        2: `${bamboo(0, -12)}${bamboo(0, 12)}`,
+        2: `${bamboo(0, -20)}${bamboo(0, 20)}`,
         
         // 三條：上面兩個，下面一個居中
-        3: `${bamboo(-10, -10)}${bamboo(10, -10)}${bamboo(0, 15)}`,
+        3: `${bamboo(-18, -18)}${bamboo(18, -18)}${bamboo(0, 25)}`,
         
         // 四條：2x2 排列
-        4: `${bamboo(-8, -12)}${bamboo(8, -12)}${bamboo(-8, 12)}${bamboo(8, 12)}`,
+        4: `${bamboo(-16, -20)}${bamboo(16, -20)}${bamboo(-16, 20)}${bamboo(16, 20)}`,
         
         // 五條：四角竹節 + 中間紅竹節
-        5: `${bamboo(-10, -12)}${bamboo(10, -12)}${bamboo(0, 0, true)}${bamboo(-10, 12)}${bamboo(10, 12)}`,
+        5: `${bamboo(-18, -20)}${bamboo(18, -20)}${bamboo(0, 0, true)}${bamboo(-18, 20)}${bamboo(18, 20)}`,
         
         // 六條：2x3 排列
-        6: `${bamboo(-8, -16)}${bamboo(8, -16)}${bamboo(-8, 0)}${bamboo(8, 0)}${bamboo(-8, 16)}${bamboo(8, 16)}`,
+        6: `${bamboo(-16, -28)}${bamboo(16, -28)}${bamboo(-16, 0)}${bamboo(16, 0)}${bamboo(-16, 28)}${bamboo(16, 28)}`,
         
         // 七條：六個竹節 + 中間紅竹節
-        7: `${bamboo(-8, -16)}${bamboo(8, -16)}${bamboo(-8, 0)}${bamboo(8, 0, true)}${bamboo(-8, 16)}${bamboo(8, 16)}`,
+        7: `${bamboo(-16, -28)}${bamboo(16, -28)}${bamboo(-16, 0)}${bamboo(16, 0, true)}${bamboo(-16, 28)}${bamboo(16, 28)}`,
         
         // 八條：2x4 排列
-        8: `${bamboo(-8, -20)}${bamboo(8, -20)}${bamboo(-8, -7)}${bamboo(8, -7)}${bamboo(-8, 7)}${bamboo(8, 7)}${bamboo(-8, 20)}${bamboo(8, 20)}`,
+        8: `${bamboo(-16, -36)}${bamboo(16, -36)}${bamboo(-16, -12)}${bamboo(16, -12)}${bamboo(-16, 12)}${bamboo(16, 12)}${bamboo(-16, 36)}${bamboo(16, 36)}`,
         
         // 九條：三列，中間有紅竹節
-        9: `${bamboo(-12, -16)}${bamboo(0, -16)}${bamboo(12, -16)}${bamboo(-12, 0)}${bamboo(0, 0, true)}${bamboo(12, 0)}${bamboo(-12, 16)}${bamboo(0, 16)}${bamboo(12, 16)}`
+        9: `${bamboo(-20, -28)}${bamboo(0, -28)}${bamboo(20, -28)}${bamboo(-20, 0)}${bamboo(0, 0, true)}${bamboo(20, 0)}${bamboo(-20, 28)}${bamboo(0, 28)}${bamboo(20, 28)}`
     };
     
     return patterns[num] || '';

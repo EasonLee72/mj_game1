@@ -15,26 +15,26 @@
   
   <!-- 牌面內容 -->
   <g transform="translate(60, 84)">
-    <g transform="translate(-10,-12)">
-            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-        </g><g transform="translate(10,-12)">
-            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+    <g transform="translate(-18,-20)">
+            <ellipse cx="0" cy="-10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="0" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+        </g><g transform="translate(18,-20)">
+            <ellipse cx="0" cy="-10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="0" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
         </g><g transform="translate(0,0)">
-            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#e63946" stroke="#c1121f" stroke-width="0.5"/>
-            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#e63946" stroke="#c1121f" stroke-width="0.5"/>
-            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#e63946" stroke="#c1121f" stroke-width="0.5"/>
-        </g><g transform="translate(-10,12)">
-            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-        </g><g transform="translate(10,12)">
-            <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
-            <ellipse cx="0" cy="6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
+            <ellipse cx="0" cy="-10" rx="5" ry="12" fill="#e63946" stroke="#c1121f" stroke-width="1.2"/>
+            <ellipse cx="0" cy="0" rx="5" ry="12" fill="#e63946" stroke="#c1121f" stroke-width="1.2"/>
+            <ellipse cx="0" cy="10" rx="5" ry="12" fill="#e63946" stroke="#c1121f" stroke-width="1.2"/>
+        </g><g transform="translate(-18,20)">
+            <ellipse cx="0" cy="-10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="0" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+        </g><g transform="translate(18,20)">
+            <ellipse cx="0" cy="-10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="0" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
+            <ellipse cx="0" cy="10" rx="5" ry="12" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="1.2"/>
         </g>
   </g>
 </svg>
