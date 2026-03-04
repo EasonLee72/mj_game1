@@ -27,12 +27,14 @@ jobs:
           cp index.html dev-dist/
           cp firebase-storage.js dev-dist/
           cp -r tiles dev-dist/
+          cp mahjong-*.html dev-dist/ 2>/dev/null || true
           cp README.md dev-dist/ 2>/dev/null || true
           
           # 複製到 dev 資料夾（開發版）
           cp index.html dev-dist/dev/
           cp firebase-storage.js dev-dist/dev/
           cp -r tiles dev-dist/dev/
+          cp mahjong-*.html dev-dist/dev/ 2>/dev/null || true
       
       - name: 🚀 Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
