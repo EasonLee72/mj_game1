@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🀄 台灣麻將聽牌挑戰</title>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6133062875898086" crossorigin="anonymous"></script>
     <style>
         * {
             margin: 0;
@@ -558,6 +561,18 @@
             .tile { width: 45px; height: 60px; font-size: 1.5em; }
             .option-btn { padding: 10px 15px; font-size: 1.1em; }
             .game-info { flex-direction: column; align-items: center; }
+        }
+        
+        /* Google AdSense */
+        .ad-container {
+            margin: 10px auto;
+            text-align: center;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        .ad-container ins.adsbygoogle[data-ad-status="unfilled"] {
+            display: none !important;
         }
     </style>
 </head>
@@ -1295,7 +1310,7 @@
                     total: 10,
                     time: this.totalTime,
                     timeStr: timeStr,
-                    date: new Date().toLocaleString('zh-TW')
+                    date: new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })
                 };
                 
                 // 如果是第一名且有照片，儲存照片到 Firebase
@@ -1338,10 +1353,9 @@
                     return;
                 }
 
-                const medals = ['🥇','','🥉'];
                 tbody.innerHTML = leaderboard.map((entry, i) => `
                     <tr>
-                        <td>${medals[i] || (i+1)}</td>
+                        <td>${i+1}</td>
                         <td>${entry.name}</td>
                         <td>${entry.score}</td>
                         <td>答對${entry.correct || 0}題/${entry.total || 10}題</td>
