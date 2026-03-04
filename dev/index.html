@@ -574,176 +574,26 @@
         .ad-container ins.adsbygoogle[data-ad-status="unfilled"] {
             display: none !important;
         }
-        
-        /* Language Selector */
-        .lang-selector {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-        
-        .lang-btn {
-            background: linear-gradient(145deg, #ffd700 0%, #ffb347 100%);
-            border: 2px solid #cc9900;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            transition: all 0.2s;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-        }
-        
-        .lang-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
-        }
-        
-        .lang-dropdown {
-            position: absolute;
-            top: 60px;
-            right: 0;
-            background: linear-gradient(145deg, #1b4332 0%, #2d6a4f 100%);
-            border: 2px solid #ffd700;
-            border-radius: 10px;
-            padding: 10px 0;
-            min-width: 180px;
-            display: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-        }
-        
-        .lang-dropdown.show {
-            display: block;
-            animation: slideDown 0.2s ease;
-        }
-        
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .lang-dropdown a {
-            display: block;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        
-        .lang-dropdown a:hover {
-            background: rgba(255,215,0,0.2);
-            color: #ffd700;
-        }
-        
-        .lang-dropdown a.active {
-            background: rgba(255,215,0,0.3);
-            color: #ffd700;
-            font-weight: bold;
-        }
-        
-        .lang-dropdown a::before {
-            margin-right: 8px;
-        }
-        
-        @media (max-width: 600px) {
-            .lang-selector {
-                top: 10px;
-                right: 10px;
-            }
-            .lang-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3em;
-            }
-        }
-        
-        /* 麻將教學連結 */
-        .info-links {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-        }
-        
-        .info-links h3 {
-            color: #ffd700;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            text-align: center;
-        }
-        
-        .info-links ul {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
-        
-        .info-links a {
-            display: block;
-            padding: 12px 15px;
-            background: rgba(255,215,0,0.2);
-            border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 6px;
-            color: #ffd700;
-            text-decoration: none;
-            transition: all 0.2s;
-            font-size: 0.95em;
-        }
-        
-        .info-links a:hover {
-            background: rgba(255,215,0,0.3);
-            transform: translateY(-2px);
-            color: #fff;
-        }
-        
-        .info-links a::before {
-            content: '📖 ';
-        }
-        
-        @media (max-width: 600px) {
-            .info-links ul {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Language Selector -->
-    <div class="lang-selector">
-        <button class="lang-btn" onclick="toggleLangDropdown()" title="選擇語言">🌐</button>
-        <div class="lang-dropdown" id="langDropdown">
-            <a onclick="setLanguage('zh-TW')" class="active">🇹🇼 繁體中文</a>
-            <a onclick="setLanguage('zh-CN')">🇨🇳 简体中文</a>
-            <a onclick="setLanguage('en')">🇺🇸 English</a>
-            <a onclick="setLanguage('ja')">🇯🇵 日本語</a>
-            <a onclick="setLanguage('ko')">🇰🇷 한국어</a>
-        </div>
-    </div>
-
     <div class="container">
         <!-- Start Screen -->
         <div id="start-screen" class="screen active">
             <div class="header">
-                <h1 data-i18n="title">🀄 台灣麻將聽牌挑戰</h1>
-                <p data-i18n="subtitle">測試你的聽牌判斷能力！</p>
+                <h1>🀄 台灣麻將聽牌挑戰</h1>
+                <p>測試你的聽牌判斷能力！</p>
             </div>
             
             <div class="start-screen">
                 <div class="rules">
-                    <h3 style="color: #ffd700; margin-bottom: 15px;" data-i18n="rules">📜 遊戲規則</h3>
+                    <h3 style="color: #ffd700; margin-bottom: 15px;">📜 遊戲規則</h3>
                     <ul>
-                        <li data-i18n="rule1">共 <strong>10 回合</strong>，每回合都是<strong>清一色</strong>牌型（萬/筒/條）</li>
-                        <li data-i18n="rule2">每回合顯示 <strong>16 張牌</strong>，判斷聽哪幾張牌</li>
-                        <li data-i18n="rule3">點選下方按鈕選擇你認為的聽牌</li>
-                        <li data-i18n="rule4"><strong>時間越短，分數越高</strong>！每回合有時間加成</li>
-                        <li data-i18n="rule5">完成後可上傳排行榜，爭奪前三名！</li>
+                        <li>共 <strong>10 回合</strong>，每回合都是<strong>清一色</strong>牌型（萬/筒/條）</li>
+                        <li>每回合顯示 <strong>16 張牌</strong>，判斷聽哪幾張牌</li>
+                        <li>點選下方按鈕選擇你認為的聽牌</li>
+                        <li><strong>時間越短，分數越高</strong>！每回合有時間加成</li>
+                        <li>完成後可上傳排行榜，爭奪前三名！</li>
                     </ul>
                 </div>
 
@@ -753,7 +603,7 @@
                         <img id="champion-photo" class="champion-photo" src="" alt="冠軍照片" style="display: none;">
                         <div id="champion-placeholder" class="champion-placeholder">
                             <div class="champion-badge">👑</div>
-                            <div class="no-champion" data-i18n="noChampion">暫無冠軍</div>
+                            <div class="no-champion">暫無冠軍</div>
                         </div>
                     </div>
                     <div class="champion-info" id="champion-info" style="display: none;">
@@ -763,40 +613,29 @@
                 </div>
 
                 <div class="leaderboard" id="start-leaderboard">
-                    <h3 data-i18n="leaderboard">🏆 排行榜</h3>
+                    <h3>🏆 排行榜</h3>
                     <table id="leaderboard-table">
                         <thead>
                             <tr>
-                                <th data-i18n="rank">名次</th>
-                                <th data-i18n="name">姓名</th>
-                                <th data-i18n="score">分數</th>
-                                <th data-i18n="correct">答對</th>
-                                <th data-i18n="time">時間</th>
+                                <th>名次</th>
+                                <th>姓名</th>
+                                <th>分數</th>
+                                <th>答對</th>
+                                <th>時間</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-body">
-                            <tr><td colspan="5" data-i18n="noRecord">暫無記錄</td></tr>
+                            <tr><td colspan="5">暫無記錄</td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="game.start()" data-i18n="startGame">🎮 開始遊戲</button>
+                    <button class="btn btn-primary" onclick="game.start()">🎮 開始遊戲</button>
                 </div>
 
                 <div class="admin-link">
-                    <a onclick="game.showAdminLogin()" data-i18n="adminLogin">🔧 管理員登入</a>
-                </div>
-                
-                <!-- 麻將教學與知識 -->
-                <div class="info-links">
-                    <h3 data-i18n="mahjongKnowledge">🀄 麻將知識與教學</h3>
-                    <ul>
-                        <li><a href="mahjong-history.html" data-i18n="mahjongHistory">📜 麻將的起源與歷史</a></li>
-                        <li><a href="mahjong-rules.html" data-i18n="mahjongRules">📋 台灣麻將規則介紹</a></li>
-                        <li><a href="mahjong-tactics.html" data-i18n="mahjongTactics">💡 聽牌技巧教學</a></li>
-                        <li><a href="mahjong-terms.html" data-i18n="mahjongTerms">📖 麻將術語辭典</a></li>
-                    </ul>
+                    <a onclick="game.showAdminLogin()">🔧 管理員登入</a>
                 </div>
             </div>
         </div>
@@ -804,18 +643,18 @@
         <!-- Game Screen -->
         <div id="game-screen" class="screen">
             <div class="header">
-                <h1 data-i18n="title">🀄 台灣麻將聽牌挑戰</h1>
+                <h1>🀄 台灣麻將聽牌挑戰</h1>
                 <div class="game-info">
                     <div class="info-box">
-                        <div class="label" data-i18n="round">回合</div>
+                        <div class="label">回合</div>
                         <div class="value"><span id="round">1</span>/10</div>
                     </div>
                     <div class="info-box">
-                        <div class="label" data-i18n="points">得分</div>
+                        <div class="label">得分</div>
                         <div class="value" id="score">0</div>
                     </div>
                     <div class="info-box">
-                        <div class="label" data-i18n="correct">正確</div>
+                        <div class="label">正確</div>
                         <div class="value"><span id="correct">0</span>/10</div>
                     </div>
                 </div>
@@ -828,7 +667,7 @@
             <div class="timer-display" id="timer">00:00</div>
 
             <!-- 題目區域 -->
-            <div class="section-title" style="text-align: center; font-size: 1.2em; color: #ffd700; margin: 15px 0 10px; font-weight: bold;" data-i18n="questionTitle">
+            <div class="section-title" style="text-align: center; font-size: 1.2em; color: #ffd700; margin: 15px 0 10px; font-weight: bold;">
                 🀄 題目：請看下面的手牌
             </div>
             <div class="tiles-container" id="tiles-container"></div>
@@ -836,44 +675,44 @@
             <div id="feedback" class="feedback" style="display: none;"></div>
 
             <!-- 答題區域 -->
-            <div class="section-title" style="text-align: center; font-size: 1.2em; color: #ffd700; margin: 15px 0 10px; font-weight: bold;" data-i18n="answerTitle">
+            <div class="section-title" style="text-align: center; font-size: 1.2em; color: #ffd700; margin: 15px 0 10px; font-weight: bold;">
                 🫵 答題：選擇你認為的聽牌
             </div>
             <div class="options-container" id="options-container"></div>
 
             <div class="action-buttons">
-                <button class="btn btn-primary" id="submit-btn" onclick="game.submitAnswer()" disabled data-i18n="submit">✅ 提交答案</button>
-                <button class="btn btn-secondary" id="next-btn" onclick="game.nextRound()" style="display: none;" data-i18n="next">➡️ 下一回合</button>
+                <button class="btn btn-primary" id="submit-btn" onclick="game.submitAnswer()" disabled>✅ 提交答案</button>
+                <button class="btn btn-secondary" id="next-btn" onclick="game.nextRound()" style="display: none;">➡️ 下一回合</button>
             </div>
         </div>
 
         <!-- Result Screen -->
         <div id="result-screen" class="screen">
             <div class="header">
-                <h1 data-i18n="gameOver">🎊 遊戲結束！</h1>
+                <h1>🎊 遊戲結束！</h1>
             </div>
 
             <div class="start-screen">
                 <div class="info-box" style="display: inline-block; margin: 20px; min-width: 200px;">
-                    <div class="label" data-i18n="totalScore">總分</div>
+                    <div class="label">總分</div>
                     <div class="value" id="final-score" style="font-size: 2.5em;">0</div>
                 </div>
 
                 <div style="margin: 30px 0;">
-                    <p style="font-size: 1.3em;" data-i18n="correct">正確：<span id="final-correct" style="color: #4CAF50; font-weight: bold;">0</span>/10</p>
-                    <p style="font-size: 1.3em;" data-i18n="time">總時間：<span id="final-time" style="color: #ffd700; font-weight: bold;">00:00</span></p>
+                    <p style="font-size: 1.3em;">正確：<span id="final-correct" style="color: #4CAF50; font-weight: bold;">0</span>/10</p>
+                    <p style="font-size: 1.3em;">總時間：<span id="final-time" style="color: #ffd700; font-weight: bold;">00:00</span></p>
                 </div>
 
                 <div class="leaderboard">
-                    <h3 data-i18n="leaderboard">🏆 排行榜</h3>
+                    <h3>🏆 排行榜</h3>
                     <table>
                         <thead>
                             <tr>
-                                <th data-i18n="rank">名次</th>
-                                <th data-i18n="name">姓名</th>
-                                <th data-i18n="score">分數</th>
-                                <th data-i18n="correct">答對</th>
-                                <th data-i18n="time">時間</th>
+                                <th>名次</th>
+                                <th>姓名</th>
+                                <th>分數</th>
+                                <th>答對</th>
+                                <th>時間</th>
                             </tr>
                         </thead>
                         <tbody id="final-leaderboard-body"></tbody>
@@ -881,9 +720,9 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="game.showNameInput()" data-i18n="uploadScore">📝 上傳成績</button>
-                    <button class="btn btn-secondary" onclick="game.restart()" data-i18n="restart">🔄 再玩一次</button>
-                    <button class="btn btn-primary" onclick="game.goHome()" style="background: linear-gradient(145deg, #4CAF50 0%, #2d5a3d 100%); color: white;" data-i18n="goHome">🏠 回首頁</button>
+                    <button class="btn btn-primary" onclick="game.showNameInput()">📝 上傳成績</button>
+                    <button class="btn btn-secondary" onclick="game.restart()">🔄 再玩一次</button>
+                    <button class="btn btn-primary" onclick="game.goHome()" style="background: linear-gradient(145deg, #4CAF50 0%, #2d5a3d 100%); color: white;">🏠 回首頁</button>
                 </div>
             </div>
         </div>
@@ -1672,249 +1511,8 @@
         // 初始化遊戲
         const game = new MahjongGame();
 
-        // 多語言翻譯
-        const translations = {
-            'zh-TW': {
-                title: '🀄 台灣麻將聽牌挑戰',
-                subtitle: '測試你的聽牌判斷能力！',
-                rules: '📜 遊戲規則',
-                rule1: '共 <strong>10 回合</strong>，每回合都是<strong>清一色</strong>牌型（萬/筒/條）',
-                rule2: '每回合顯示 <strong>16 張牌</strong>，判斷聽哪幾張牌',
-                rule3: '點選下方按鈕選擇你認為的聽牌',
-                rule4: '<strong>時間越短，分數越高</strong>！每回合有時間加成',
-                rule5: '完成後可上傳排行榜，爭奪前三名！',
-                champion: '🏆 冠軍',
-                noChampion: '暫無冠軍',
-                leaderboard: '🏆 排行榜',
-                rank: '名次',
-                name: '姓名',
-                score: '分數',
-                correct: '答對',
-                time: '時間',
-                noRecord: '暫無記錄',
-                startGame: '🎮 開始遊戲',
-                adminLogin: '🔧 管理員登入',
-                round: '回合',
-                points: '得分',
-                questionTitle: '🀄 題目：請看下面的手牌',
-                answerTitle: '🫵 答題：選擇你認為的聽牌',
-                submit: '✅ 提交答案',
-                next: '➡️ 下一回合',
-                gameOver: '🎊 遊戲結束！',
-                totalScore: '總分',
-                uploadScore: '📝 上傳成績',
-                reviewChampion: '👁️ 回顧冠軍照片',
-                restart: '🔄 再玩一次',
-                goHome: '🏠 回首頁',
-                mahjongKnowledge: '🀄 麻將知識與教學',
-                mahjongHistory: '📜 麻將的起源與歷史',
-                mahjongRules: '📋 台灣麻將規則介紹',
-                mahjongTactics: '💡 聽牌技巧教學',
-                mahjongTerms: '📖 麻將術語辭典'
-            },
-            'zh-CN': {
-                title: '🀄 台湾麻将听牌挑战',
-                subtitle: '测试你的听牌判断能力！',
-                rules: '📜 游戏规则',
-                rule1: '共 <strong>10 回合</strong>，每回合都是<strong>清一色</strong>牌型（万/筒/条）',
-                rule2: '每回合显示 <strong>16 张牌</strong>，判断听哪几张牌',
-                rule3: '点击下方按钮选择你认为的听牌',
-                rule4: '<strong>时间越短，分数越高</strong>！每回合有时间加成',
-                rule5: '完成后可上传排行榜，争夺前三名！',
-                champion: '🏆 冠军',
-                noChampion: '暂无冠军',
-                leaderboard: '🏆 排行榜',
-                rank: '名次',
-                name: '姓名',
-                score: '分数',
-                correct: '答对',
-                time: '时间',
-                noRecord: '暂无记录',
-                startGame: '🎮 开始游戏',
-                adminLogin: '🔧 管理员登入',
-                round: '回合',
-                points: '得分',
-                questionTitle: '🀄 题目：请看下面的手牌',
-                answerTitle: '🫵 答题：选择你认为的听牌',
-                submit: '✅ 提交答案',
-                next: '➡️ 下一回合',
-                gameOver: '🎊 游戏结束！',
-                totalScore: '总分',
-                uploadScore: '📝 上传成绩',
-                reviewChampion: '👁️ 回顾冠军照片',
-                restart: '🔄 再玩一次',
-                goHome: '🏠 回首页',
-                mahjongKnowledge: '🀄 麻将知识与教学',
-                mahjongHistory: '📜 麻将的起源与历史',
-                mahjongRules: '📋 台湾麻将规则介绍',
-                mahjongTactics: '💡 听牌技巧教学',
-                mahjongTerms: '📖 麻将术语辞典'
-            },
-            'en': {
-                title: '🀄 Mahjong Listening Challenge',
-                subtitle: 'Test your Mahjong skills!',
-                rules: '📜 Game Rules',
-                rule1: '<strong>10 rounds</strong>, each with a <strong>pure suit</strong> hand',
-                rule2: 'Each round shows <strong>16 tiles</strong>, guess which tiles complete the hand',
-                rule3: 'Click buttons below to select your answer',
-                rule4: '<strong>Faster = More points</strong>! Time bonus each round',
-                rule5: 'Upload your score and compete for the top!',
-                champion: '🏆 Champion',
-                noChampion: 'No champion yet',
-                leaderboard: '🏆 Leaderboard',
-                rank: 'Rank',
-                name: 'Name',
-                score: 'Score',
-                correct: 'Correct',
-                time: 'Time',
-                noRecord: 'No records yet',
-                startGame: '🎮 Start Game',
-                adminLogin: '🔧 Admin Login',
-                round: 'Round',
-                points: 'Points',
-                questionTitle: '🀄 Question: Look at the hand below',
-                answerTitle: '🫵 Answer: Select the listening tiles',
-                submit: '✅ Submit',
-                next: '➡️ Next',
-                gameOver: '🎊 Game Over!',
-                totalScore: 'Total Score',
-                uploadScore: '📝 Upload Score',
-                reviewChampion: '👁️ Review Champion',
-                restart: '🔄 Play Again',
-                goHome: '🏠 Home',
-                mahjongKnowledge: '🀄 Mahjong Knowledge',
-                mahjongHistory: '📜 History of Mahjong',
-                mahjongRules: '📋 Taiwan Mahjong Rules',
-                mahjongTactics: '💡 Listening Tactics',
-                mahjongTerms: '📖 Mahjong Terms'
-            },
-            'ja': {
-                title: '🀄 麻雀リーチチャレンジ',
-                subtitle: '麻雀の聴牌判断力をテスト！',
-                rules: '📜 ゲームルール',
-                rule1: '全<strong>10 ラウンド</strong>、各ラウンドは<strong>一色</strong>の手牌',
-                rule2: '各ラウンド<strong>16 枚の牌</strong>を表示、聴牌を当てる',
-                rule3: '下のボタンから答えを選択',
-                rule4: '<strong>時間が短いほど高得点</strong>！各ラウンドに時間ボーナス',
-                rule5: 'スコアをアップロードしてランキングで競おう！',
-                champion: '🏆 チャンピオン',
-                noChampion: 'チャンピオンなし',
-                leaderboard: '🏆 ランキング',
-                rank: '順位',
-                name: '名前',
-                score: 'スコア',
-                correct: '正解',
-                time: '時間',
-                noRecord: '記録なし',
-                startGame: '🎮 ゲーム開始',
-                adminLogin: '🔧 管理者ログイン',
-                round: 'ラウンド',
-                points: '得点',
-                questionTitle: '🀄 問題：以下の手牌を見る',
-                answerTitle: '🫵 回答：聴牌を選択',
-                submit: '✅ 送信',
-                next: '➡️ 次へ',
-                gameOver: '🎊 ゲーム終了！',
-                totalScore: '合計スコア',
-                uploadScore: '📝 スコアアップロード',
-                reviewChampion: '👁️ チャンピオン確認',
-                restart: '🔄 もう一度プレイ',
-                goHome: '🏠 ホームへ',
-                mahjongKnowledge: '🀄 麻雀の知識',
-                mahjongHistory: '📜 麻雀の歴史',
-                mahjongRules: '📋 台湾麻雀ルール',
-                mahjongTactics: '💡 リーチ戦術',
-                mahjongTerms: '📖 麻雀用語'
-            },
-            'ko': {
-                title: '🀄 마작 리치 챌린지',
-                subtitle: '마작 청패 판단력을 테스트하세요!',
-                rules: '📜 게임 규칙',
-                rule1: '총 <strong>10 라운드</strong>, 각 라운드는 <strong>일색</strong> 패형',
-                rule2: '각 라운드 <strong>16 장의 패</strong> 표시, 청패 맞추기',
-                rule3: '아래 버튼에서 답안 선택',
-                rule4: '<strong>시간이 짧을수록 고득점</strong>! 라운드별 시간 보너스',
-                rule5: '점수를 업로드하고 랭킹에서 경쟁하세요!',
-                champion: '🏆 챔피언',
-                noChampion: '챔피언 없음',
-                leaderboard: '🏆 리더보드',
-                rank: '순위',
-                name: '이름',
-                score: '점수',
-                correct: '정답',
-                time: '시간',
-                noRecord: '기록 없음',
-                startGame: '🎮 게임 시작',
-                adminLogin: '🔧 관리자 로그인',
-                round: '라운드',
-                points: '득점',
-                questionTitle: '🀄 문제: 아래 손패 보기',
-                answerTitle: '🫵 답변: 청패 선택',
-                submit: '✅ 제출',
-                next: '➡️ 다음',
-                gameOver: '🎊 게임 종료!',
-                totalScore: '총점',
-                uploadScore: '📝 점수 업로드',
-                reviewChampion: '👁️ 챔피언 확인',
-                restart: '🔄 다시プレイ',
-                goHome: '🏠 홈으로',
-                mahjongKnowledge: '🀄 마작 지식',
-                mahjongHistory: '📜 마작의 역사',
-                mahjongRules: '📋 대만 마작 규칙',
-                mahjongTactics: '💡 리치 전술',
-                mahjongTerms: '📖 마작 용어'
-            }
-        };
-
-        // 語言切換功能
-        function toggleLangDropdown() {
-            document.getElementById('langDropdown').classList.toggle('show');
-        }
-
-        function setLanguage(lang) {
-            localStorage.setItem('selectedLanguage', lang);
-            applyLanguage(lang);
-            document.getElementById('langDropdown').classList.remove('show');
-        }
-
-        function applyLanguage(lang) {
-            const t = translations[lang] || translations['zh-TW'];
-            
-            // 更新所有有 data-i18n 屬性的元素
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) {
-                    el.innerHTML = t[key];
-                }
-            });
-            
-            // 更新下拉選單 active 狀態
-            document.querySelectorAll('.lang-dropdown a').forEach(a => {
-                a.classList.remove('active');
-                if (a.getAttribute('onclick').includes(lang)) {
-                    a.classList.add('active');
-                }
-            });
-        }
-
-        // 初始化語言
-        function initLanguage() {
-            const savedLang = localStorage.getItem('selectedLanguage') || 'zh-TW';
-            applyLanguage(savedLang);
-            
-            // 點擊外部關閉下拉選單
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.lang-selector')) {
-                    document.getElementById('langDropdown').classList.remove('show');
-                }
-            });
-        }
-
         // 載入時顯示排行榜和冠軍肖像
         document.addEventListener('DOMContentLoaded', async () => {
-            // 初始化語言
-            initLanguage();
-            
             // 從 Firebase 載入排行榜
             console.log('🔄 載入雲端排行榜...');
             const leaderboard = await firebaseStorage.fetchLeaderboard();
