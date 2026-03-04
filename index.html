@@ -1295,7 +1295,7 @@
                     total: 10,
                     time: this.totalTime,
                     timeStr: timeStr,
-                    date: new Date().toLocaleString('zh-TW')
+                    date: new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })
                 };
                 
                 // 如果是第一名且有照片，儲存照片到 Firebase
