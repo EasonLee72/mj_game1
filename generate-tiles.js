@@ -7,10 +7,10 @@ if (!fs.existsSync(tilesDir)) {
     fs.mkdirSync(tilesDir, { recursive: true });
 }
 
-// 麻將牌寬高
-const TILE_WIDTH = 60;
-const TILE_HEIGHT = 84;
-const TILE_RADIUS = 5;
+// 麻將牌寬高 - 高解析度
+const TILE_WIDTH = 120;
+const TILE_HEIGHT = 168;
+const TILE_RADIUS = 10;
 
 // 生成 SVG 麻將牌
 function generateTileSVG(suit, num, content) {
@@ -36,86 +36,86 @@ function generateTileSVG(suit, num, content) {
 </svg>`;
 }
 
-// 筒子牌圓圈 - 按照參考圖：1-2 筒紅點，3-9 筒藍點
+// 筒子牌圓圈 - 按照參考圖：1-2 筒紅點，3-9 筒藍點（高解析度）
 function generateTongCircles(num) {
     const patterns = {
         // 1 筒：一個大紅點居中
-        1: `<circle cx="0" cy="0" r="12" fill="#e63946" stroke="#c1121f" stroke-width="1.5"/>`,
+        1: `<circle cx="0" cy="0" r="20" fill="#e63946" stroke="#c1121f" stroke-width="2.5"/>`,
         
         // 2 筒：兩個紅點直排
         2: `
-            <circle cx="0" cy="-12" r="9" fill="#e63946" stroke="#c1121f" stroke-width="1"/>
-            <circle cx="0" cy="12" r="9" fill="#e63946" stroke="#c1121f" stroke-width="1"/>
+            <circle cx="0" cy="-24" r="16" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
+            <circle cx="0" cy="24" r="16" fill="#e63946" stroke="#c1121f" stroke-width="2"/>
         `,
         
         // 3 筒：上面兩個藍點，下面一個藍點
         3: `
-            <circle cx="-10" cy="-10" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
-            <circle cx="10" cy="-10" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
-            <circle cx="0" cy="12" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
+            <circle cx="-20" cy="-20" r="14" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.5"/>
+            <circle cx="20" cy="-20" r="14" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.5"/>
+            <circle cx="0" cy="24" r="14" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.5"/>
         `,
         
         // 4 筒：2x2 藍點
         4: `
-            <circle cx="-9" cy="-9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
-            <circle cx="9" cy="-9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
-            <circle cx="-9" cy="9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
-            <circle cx="9" cy="9" r="7" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.8"/>
+            <circle cx="-18" cy="-18" r="14" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.5"/>
+            <circle cx="18" cy="-18" r="14" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.5"/>
+            <circle cx="-18" cy="18" r="14" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.5"/>
+            <circle cx="18" cy="18" r="14" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.5"/>
         `,
         
         // 5 筒：四角藍點 + 中間紅點
         5: `
-            <circle cx="-11" cy="-11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="11" cy="-11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="0" cy="0" r="8" fill="#e63946" stroke="#c1121f" stroke-width="0.8"/>
-            <circle cx="-11" cy="11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="11" cy="11" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="-22" cy="-22" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="22" cy="-22" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="0" cy="0" r="15" fill="#e63946" stroke="#c1121f" stroke-width="1.5"/>
+            <circle cx="-22" cy="22" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="22" cy="22" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
         `,
         
         // 6 筒：2x3 藍點
         6: `
-            <circle cx="-8" cy="-14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="8" cy="-14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="-8" cy="0" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="8" cy="0" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="-8" cy="14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
-            <circle cx="8" cy="14" r="6" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.7"/>
+            <circle cx="-16" cy="-28" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="16" cy="-28" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="-16" cy="0" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="16" cy="0" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="-16" cy="28" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
+            <circle cx="16" cy="28" r="12" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.3"/>
         `,
         
         // 7 筒：六個藍點 + 中間紅點
         7: `
-            <circle cx="-8" cy="-14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="8" cy="-14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="-8" cy="0" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="8" cy="0" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="-8" cy="14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="0" cy="0" r="7" fill="#e63946" stroke="#c1121f" stroke-width="0.7"/>
-            <circle cx="8" cy="14" r="5.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-16" cy="-28" r="11" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.2"/>
+            <circle cx="16" cy="-28" r="11" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.2"/>
+            <circle cx="-16" cy="0" r="11" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.2"/>
+            <circle cx="16" cy="0" r="11" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.2"/>
+            <circle cx="-16" cy="28" r="11" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.2"/>
+            <circle cx="0" cy="0" r="13" fill="#e63946" stroke="#c1121f" stroke-width="1.3"/>
+            <circle cx="16" cy="28" r="11" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.2"/>
         `,
         
         // 8 筒：2x4 藍點
         8: `
-            <circle cx="-8" cy="-16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="8" cy="-16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="-8" cy="-5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="8" cy="-5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="-8" cy="5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="8" cy="5" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="-8" cy="16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
-            <circle cx="8" cy="16" r="5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.6"/>
+            <circle cx="-16" cy="-32" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
+            <circle cx="16" cy="-32" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
+            <circle cx="-16" cy="-10" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
+            <circle cx="16" cy="-10" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
+            <circle cx="-16" cy="10" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
+            <circle cx="16" cy="10" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
+            <circle cx="-16" cy="32" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
+            <circle cx="16" cy="32" r="10" fill="#1d3557" stroke="#0d1b2a" stroke-width="1.1"/>
         `,
         
         // 9 筒：九宮格（八藍 + 一中紅）
         9: `
-            <circle cx="-11" cy="-11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
-            <circle cx="0" cy="-11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
-            <circle cx="11" cy="-11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
-            <circle cx="-11" cy="0" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
-            <circle cx="0" cy="0" r="6" fill="#e63946" stroke="#c1121f" stroke-width="0.6"/>
-            <circle cx="11" cy="0" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
-            <circle cx="-11" cy="11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
-            <circle cx="0" cy="11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
-            <circle cx="11" cy="11" r="4.5" fill="#1d3557" stroke="#0d1b2a" stroke-width="0.5"/>
+            <circle cx="-22" cy="-22" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
+            <circle cx="0" cy="-22" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
+            <circle cx="22" cy="-22" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
+            <circle cx="-22" cy="0" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
+            <circle cx="0" cy="0" r="12" fill="#e63946" stroke="#c1121f" stroke-width="1.2"/>
+            <circle cx="22" cy="0" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
+            <circle cx="-22" cy="22" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
+            <circle cx="0" cy="22" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
+            <circle cx="22" cy="22" r="9" fill="#1d3557" stroke="#0d1b2a" stroke-width="1"/>
         `
     };
     
@@ -126,8 +126,8 @@ function generateTongCircles(num) {
 function generateWanText(num) {
     const wanChars = ['一','二','三','四','五','六','七','八','九'];
     return `
-        <text x="0" y="-5" font-size="18" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">${wanChars[num-1]}</text>
-        <text x="0" y="20" font-size="18" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">萬</text>
+        <text x="0" y="-10" font-size="36" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">${wanChars[num-1]}</text>
+        <text x="0" y="40" font-size="36" font-weight="bold" fill="#c41e3a" text-anchor="middle" writing-mode="tb" font-family="Microsoft JhengHei, Arial, sans-serif">萬</text>
     `;
 }
 

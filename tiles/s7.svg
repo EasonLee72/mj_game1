@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="60" height="84" viewBox="0 0 60 84">
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="168" viewBox="0 0 120 168">
   <defs>
     <linearGradient id="tileBg" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" style="stop-color:#fefefe;stop-opacity:1" />
@@ -8,13 +8,13 @@
   </defs>
   
   <!-- 牌面背景 -->
-  <rect x="1" y="1" width="58" height="82" rx="5" fill="url(#tileBg)" stroke="#d4c4a8" stroke-width="1.5"/>
+  <rect x="1" y="1" width="118" height="166" rx="10" fill="url(#tileBg)" stroke="#d4c4a8" stroke-width="1.5"/>
   
   <!-- 內邊框 -->
-  <rect x="4" y="4" width="52" height="76" rx="3" fill="none" stroke="#c9b896" stroke-width="0.5" opacity="0.5"/>
+  <rect x="4" y="4" width="112" height="160" rx="8" fill="none" stroke="#c9b896" stroke-width="0.5" opacity="0.5"/>
   
   <!-- 牌面內容 -->
-  <g transform="translate(30, 42)">
+  <g transform="translate(60, 84)">
     <g transform="translate(-8,-16)">
             <ellipse cx="0" cy="-6" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
             <ellipse cx="0" cy="0" rx="3" ry="7" fill="#2d5a3d" stroke="#1a3d2a" stroke-width="0.5"/>
