@@ -1338,10 +1338,9 @@
                     return;
                 }
 
-                const medals = ['🥇','','🥉'];
                 tbody.innerHTML = leaderboard.map((entry, i) => `
                     <tr>
-                        <td>${medals[i] || (i+1)}</td>
+                        <td>${i+1}</td>
                         <td>${entry.name}</td>
                         <td>${entry.score}</td>
                         <td>答對${entry.correct || 0}題/${entry.total || 10}題</td>
