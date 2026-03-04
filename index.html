@@ -565,27 +565,19 @@
         
         /* Google AdSense */
         .ad-container {
-            margin: 20px auto;
+            margin: 10px auto;
             text-align: center;
-            min-height: 100px;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        .ad-container ins.adsbygoogle[data-ad-status="unfilled"] {
+            display: none !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Google AdSense Banner -->
-        <div class="ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-6133062875898086"
-                 data-ad-slot="1234567890"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    
         <!-- Start Screen -->
         <div id="start-screen" class="screen active">
             <div class="header">
