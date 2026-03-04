@@ -3,13 +3,11 @@ const fs = require('fs');
 const path = require('path');
 
 async function cropTiles() {
-    // 輸入圖片路徑
     const inputPath = path.join(__dirname, 'mahjong-reference.jpg');
     const tilesDir = path.join(__dirname, 'tiles');
     
     if (!fs.existsSync(inputPath)) {
-        console.error('❌ 找不到輸入圖片：' + inputPath);
-        console.log('請將截圖保存為 mahjong-reference.jpg');
+        console.error('❌ 找不到輸入圖片');
         return;
     }
     
@@ -17,56 +15,65 @@ async function cropTiles() {
         fs.mkdirSync(tilesDir, { recursive: true });
     }
     
-    try {
-        // 讀取圖片
-        const image = sharp(inputPath);
-        const metadata = await image.metadata();
-        console.log('圖片尺寸:', metadata.width, 'x', metadata.height);
-        
-        // 假設圖片是 3 列 x 9 行的排列
-        const rows = 3;
-        const cols = 9;
-        
-        // 計算每張牌的尺寸（扣除邊距）
-        const tileWidth = Math.floor(metadata.width / cols);
-        const tileHeight = Math.floor(metadata.height / rows);
-        
-        console.log('每張牌尺寸:', tileWidth, 'x', tileHeight);
-        
-        // 三列分別是：筒子、萬子、條子
-        const suitNames = ['p', 'm', 's']; // p=筒，m=萬，s=條
-        
-        // 裁剪每一張牌
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                const num = col + 1;
-                const suit = suitNames[row];
-                
-                const left = col * tileWidth;
-                const top = row * tileHeight;
-                
-                const outputPath = path.join(tilesDir, `${suit}${num}.png`);
-                
-                await image
-                    .extract({
-                        left: left + 5,  // 稍微內縮，去掉邊框
-                        top: top + 5,
-                        width: tileWidth - 10,
-                        height: tileHeight - 10
-                    })
-                    .resize(120, 168)  // 統一尺寸
+    const suitNames = ['m', 'p', 's'];
+    const suitNamesChinese = ['萬', '筒', '條'];
+    const rows = 3;
+    const cols = 9;
+    
+    const metadata = await sharp(inputPath).metadata();
+    const width = metadata.width;
+    const height = metadata.height;
+    
+    console.log('圖片尺寸:', width, 'x', height);
+    
+    const tileW = width / cols;
+    const tileH = height / rows;
+    
+    console.log('每張牌尺寸:', tileW.toFixed(2), 'x', tileH.toFixed(2));
+    
+    let count = 0;
+    
+    // 每張牌都重新載入圖片
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const num = col + 1;
+            const suit = suitNames[row];
+            
+            const left = Math.floor(col * tileW);
+            const top = Math.floor(row * tileH);
+            const tW = Math.floor((col + 1) * tileW) - left;
+            const tH = Math.floor((row + 1) * tileH) - top;
+            
+            const pad = 2;
+            const extLeft = left + pad;
+            const extTop = top + pad;
+            const extW = tW - (pad * 2);
+            const extH = tH - (pad * 2);
+            
+            if (extW <= 0 || extH <= 0 || extLeft + extW > width || extTop + extH > height) {
+                console.log(`⚠️  跳過 ${suit}${num}`);
+                continue;
+            }
+            
+            const outputPath = path.join(tilesDir, `${suit}${num}.png`);
+            
+            try {
+                // 每次都重新載入圖片
+                await sharp(inputPath)
+                    .extract({ left: extLeft, top: extTop, width: extW, height: extH })
+                    .resize(120, 168)
                     .png()
                     .toFile(outputPath);
                 
-                console.log(`✅ 已生成：${suit}${num}.png`);
+                console.log(`✅ ${suit}${num}.png (${suitNamesChinese[row]}${num})`);
+                count++;
+            } catch (err) {
+                console.log(`⚠️  ${suit}${num} 失敗：${err.message}`);
             }
         }
-        
-        console.log('\n🎉 所有麻將牌圖片已生成完成！');
-        
-    } catch (error) {
-        console.error('❌ 處理失敗:', error.message);
     }
+    
+    console.log(`\n🎉 完成！共生成 ${count}/27 張牌`);
 }
 
 cropTiles();
