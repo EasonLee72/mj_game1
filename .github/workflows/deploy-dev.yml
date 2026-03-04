@@ -1,0 +1,45 @@
+name: 🚀 Deploy Development Version
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+      
+      - name: 📂 Create dev distribution
+        run: |
+          mkdir -p dev-dist/dev
+          
+          # 複製主要檔案到 root
+          cp index.html dev-dist/
+          cp firebase-storage.js dev-dist/
+          cp -r tiles dev-dist/
+          cp README.md dev-dist/ 2>/dev/null || true
+          
+          # 複製到 dev 資料夾（開發版）
+          cp index.html dev-dist/dev/
+          cp firebase-storage.js dev-dist/dev/
+          cp -r tiles dev-dist/dev/
+      
+      - name: 🚀 Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dev-dist
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '🚀 Auto-deploy develop version ${{ github.sha }}'
