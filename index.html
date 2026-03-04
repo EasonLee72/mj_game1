@@ -669,6 +669,9 @@
         </div>
     </div>
 
+    <!-- Firebase Storage -->
+    <script src="firebase-storage.js"></script>
+
     <!-- Name Input Modal -->
     <div id="name-modal" class="modal">
         <div class="modal-content">
@@ -1146,11 +1149,11 @@
                 this.renderLeaderboard('final-leaderboard-body');
             }
 
-            showNameInput() {
+            async showNameInput() {
                 document.getElementById('modal-score').textContent = this.score;
                 
-                // 檢查是否是第一名
-                const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+                // 從 Firebase 檢查是否是第一名
+                const leaderboard = await firebaseStorage.fetchLeaderboard();
                 const isNewChampion = leaderboard.length === 0 || this.score > (leaderboard[0]?.score || 0);
                 
                 const promptEl = document.getElementById('champion-upload-prompt');
@@ -1221,13 +1224,14 @@
                 document.getElementById('photo-preview').innerHTML = '';
             }
 
-            saveScore() {
+            async saveScore() {
                 const name = document.getElementById('player-name').value.trim() || '匿名玩家';
                 const mins = Math.floor(this.totalTime / 60).toString().padStart(2, '0');
                 const secs = (this.totalTime % 60).toString().padStart(2, '0');
                 const timeStr = `${mins}:${secs}`;
 
-                const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+                // 從 Firebase 讀取最新排行榜
+                let leaderboard = await firebaseStorage.fetchLeaderboard();
                 
                 // 檢查是否是第一名
                 const isNewChampion = leaderboard.length === 0 || this.score > (leaderboard[0]?.score || 0);
@@ -1250,19 +1254,9 @@
                     date: new Date().toLocaleString('zh-TW')
                 };
                 
-                // 如果是第一名且有照片，儲存照片
+                // 如果是第一名且有照片，儲存照片到 Firebase
                 if (isNewChampion && this.selectedPhoto) {
-                    entry.photo = this.selectedPhoto;
-                    // 儲存冠軍照片到 localStorage
-                    try {
-                        localStorage.setItem('mj_champion_photo', this.selectedPhoto);
-                    } catch (e) {
-                        console.error('儲存照片失敗:', e);
-                        alert('⚠️ 照片儲存失敗（可能檔案太大），將只儲存分數');
-                    }
-                } else if (isNewChampion && !this.selectedPhoto) {
-                    // 儲存黑影人形作為冠軍頭像
-                    localStorage.removeItem('mj_champion_photo'); // 清除舊照片，使用預設黑影
+                    await firebaseStorage.saveChampionPhoto(this.selectedPhoto);
                 }
 
                 leaderboard.push(entry);
@@ -1276,11 +1270,11 @@
                 // 只保留前三名
                 leaderboard.splice(3);
                 
-                try {
-                    localStorage.setItem('mj_leaderboard', JSON.stringify(leaderboard));
-                } catch (e) {
-                    console.error('儲存排行榜失敗:', e);
-                    alert('⚠️ 儲存失敗：' + e.message);
+                // 儲存到 Firebase
+                const saved = await firebaseStorage.saveLeaderboard(leaderboard);
+                
+                if (!saved) {
+                    alert('⚠️ 儲存失敗，請檢查網路連線');
                     return;
                 }
 
@@ -1288,7 +1282,7 @@
                 this.renderLeaderboard('final-leaderboard-body');
                 this.renderChampionPortrait();
                 
-                alert('✅ 成績已儲存！');
+                alert('✅ 成績已儲存到雲端！');
             }
 
             renderLeaderboard(elementId) {
@@ -1369,9 +1363,10 @@
                 }
             }
 
-            renderChampionPortrait() {
-                const championPhoto = localStorage.getItem('mj_champion_photo');
-                const leaderboard = JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+            async renderChampionPortrait() {
+                // 優先從 Firebase 載入
+                const championPhoto = await firebaseStorage.fetchChampionPhoto() || localStorage.getItem('mj_champion_photo');
+                const leaderboard = await firebaseStorage.fetchLeaderboard();
                 
                 const photoEl = document.getElementById('champion-photo');
                 const placeholderEl = document.getElementById('champion-placeholder');
@@ -1460,20 +1455,20 @@
 
         // 載入時顯示排行榜和冠軍肖像
         document.addEventListener('DOMContentLoaded', async () => {
-            // 嘗試從 GitHub 讀取排行榜
-            try {
-                const response = await fetch('leaderboard.json?t=' + Date.now());
-                if (response.ok) {
-                    const leaderboard = await response.json();
-                    localStorage.setItem('mj_leaderboard', JSON.stringify(leaderboard));
-                    console.log('✅ 從 GitHub 載入排行榜');
-                }
-            } catch (e) {
-                console.log('ℹ️ 使用本地排行榜');
+            // 從 Firebase 載入排行榜
+            console.log('🔄 載入雲端排行榜...');
+            const leaderboard = await firebaseStorage.fetchLeaderboard();
+            localStorage.setItem('mj_leaderboard', JSON.stringify(leaderboard));
+            
+            // 載入冠軍照片
+            const championPhoto = await firebaseStorage.fetchChampionPhoto();
+            if (championPhoto) {
+                localStorage.setItem('mj_champion_photo', championPhoto);
             }
             
             game.renderLeaderboard('leaderboard-body');
             game.renderChampionPortrait();
+            console.log('✅ 載入完成');
         });
 
         // Enter 鍵提交姓名
