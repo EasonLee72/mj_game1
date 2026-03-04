@@ -561,11 +561,12 @@
                                 <th>名次</th>
                                 <th>姓名</th>
                                 <th>分數</th>
+                                <th>答對</th>
                                 <th>時間</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-body">
-                            <tr><td colspan="4">暫無記錄</td></tr>
+                            <tr><td colspan="5">暫無記錄</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -651,6 +652,7 @@
                                 <th>名次</th>
                                 <th>姓名</th>
                                 <th>分數</th>
+                                <th>答對</th>
                                 <th>時間</th>
                             </tr>
                         </thead>
@@ -1241,6 +1243,8 @@
                 const entry = {
                     name: name,
                     score: this.score,
+                    correct: this.correctCount,
+                    total: 10,
                     time: this.totalTime,
                     timeStr: timeStr,
                     date: new Date().toLocaleString('zh-TW')
@@ -1302,6 +1306,7 @@
                         <td>${medals[i] || (i+1)}</td>
                         <td>${entry.name}</td>
                         <td>${entry.score}</td>
+                        <td>答對${entry.correct || 0}題/${entry.total || 10}題</td>
                         <td>${entry.timeStr}</td>
                     </tr>
                 `).join('');
