@@ -962,21 +962,26 @@
                 this.currentPattern.tiles.forEach(num => {
                     const tile = document.createElement('div');
                     tile.className = 'tile';
+                    tile.style.cssText = 'display:flex;justify-content:center;align-items:center;font-size:1.3em;font-weight:bold;';
                     
-                    const img = document.createElement('img');
+                    // 改用文字顯示，跟答案選項一樣
+                    let suitName = '';
+                    let color = '';
                     
-                    // 使用本地 SVG 麻將牌圖片
-                    // 萬子：m1-m9, 筒子：p1-p9, 條子：s1-s9
-                    let suitPrefix = '';
-                    if (this.currentPattern.suit === 'wan') suitPrefix = 'm';
-                    else if (this.currentPattern.suit === 'tong') suitPrefix = 'p';
-                    else if (this.currentPattern.suit === 'tiao') suitPrefix = 's';
+                    if (this.currentPattern.suit === 'wan') {
+                        const wanChars = ['一','二','三','四','五','六','七','八','九'];
+                        tile.textContent = `${wanChars[num-1]}萬`;
+                        color = '#c41e3a';
+                    } else if (this.currentPattern.suit === 'tong') {
+                        tile.textContent = `${num}筒`;
+                        color = '#1a5f7a';
+                    } else if (this.currentPattern.suit === 'tiao') {
+                        const tiaoChars = ['','一','二','三','四','五','六','七','八','九'];
+                        tile.textContent = `${tiaoChars[num]}條`;
+                        color = '#2d7a4f';
+                    }
                     
-                    // 使用本地生成的 SVG 圖片
-                    img.src = `tiles/${suitPrefix}${num}.svg`;
-                    img.alt = `${this.currentPattern.suit}${num}`;
-                    
-                    tile.appendChild(img);
+                    tile.style.color = color;
                     container.appendChild(tile);
                 });
             }
