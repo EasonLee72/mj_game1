@@ -246,6 +246,50 @@
             object-fit: contain;
             image-rendering: -webkit-optimize-contrast;
         }
+        
+        /* 手機橫屏優化 - 牌型顯示在一行，不需滑動 */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            .tiles-container {
+                flex-wrap: nowrap;
+                overflow: visible;
+                padding: 10px 5px;
+                gap: 3px;
+                min-height: 90px;
+                justify-content: flex-start;
+            }
+            
+            .tile {
+                width: 48px;
+                height: 67px;
+                flex-shrink: 1;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .game-info {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .info-box {
+                min-width: 80px;
+                transform: scale(0.9);
+            }
+            
+            .option-btn {
+                padding: 8px 12px;
+                font-size: 0.95em;
+                min-width: 65px;
+            }
+            
+            .btn {
+                padding: 10px 30px;
+                font-size: 1em;
+            }
+        }
 
         .tile:hover {
             transform: translateY(-3px);
