@@ -1459,7 +1459,19 @@
         const game = new MahjongGame();
 
         // 載入時顯示排行榜和冠軍肖像
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 嘗試從 GitHub 讀取排行榜
+            try {
+                const response = await fetch('leaderboard.json?t=' + Date.now());
+                if (response.ok) {
+                    const leaderboard = await response.json();
+                    localStorage.setItem('mj_leaderboard', JSON.stringify(leaderboard));
+                    console.log('✅ 從 GitHub 載入排行榜');
+                }
+            } catch (e) {
+                console.log('ℹ️ 使用本地排行榜');
+            }
+            
             game.renderLeaderboard('leaderboard-body');
             game.renderChampionPortrait();
         });
