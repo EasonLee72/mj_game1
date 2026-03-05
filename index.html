@@ -838,20 +838,17 @@
                 <div class="level-selector">
                     <h3 data-i18n="selectLevel">🎯 選擇遊戲等級</h3>
                     <div class="level-buttons">
-                        <button class="level-btn" data-level="beginner" onclick="game.selectLevel('beginner')">
-                            🌱 <span data-i18n="levelBeginner">新手級</span>
-                        </button>
-                        <button class="level-btn" data-level="normal" onclick="game.selectLevel('normal')">
+                        <button class="level-btn active" data-level="normal" onclick="game.selectLevel('normal')">
                             🎮 <span data-i18n="levelNormal">一般級</span>
                         </button>
-                        <button class="level-btn active" data-level="hardcore" onclick="game.selectLevel('hardcore')">
+                        <button class="level-btn" data-level="hardcore" onclick="game.selectLevel('hardcore')">
                             🔥 <span data-i18n="levelHardcore">地獄級</span>
                         </button>
                     </div>
                     <div class="level-info">
                         <span data-i18n="levelInfo">當前等級：</span>
                         <span class="tiles-count" id="current-level-info">
-                            <span data-i18n="levelHardcore">地獄級</span> - <span data-i18n="tilesCount">16 張牌</span>
+                            <span data-i18n="levelNormal">一般級</span> - <span data-i18n="tilesCount">7-10 張牌隨機</span>
                         </span>
                     </div>
                 </div>
@@ -1094,16 +1091,10 @@
     <script>
         // 遊戲等級設定
         const LEVELS = {
-            beginner: { 
-                name: '新手級', 
-                tiles: 5,
-                description: '5 張牌 - 適合初學者',
-                color: '#4CAF50'
-            },
             normal: { 
                 name: '一般級', 
-                tiles: 10,
-                description: '10 張牌 - 中等難度',
+                tiles: '7-10',
+                description: '7 張或 10 張牌隨機 - 中等難度',
                 color: '#2196F3'
             },
             hardcore: { 
@@ -1158,13 +1149,13 @@
 
                 const totalTiles = tiles.length;
                 
-                // 新手級（6 張牌胡牌）：1 對 +1 組
-                if (level === 'beginner' && totalTiles === 6) {
-                    return this.canWinBeginner(counts);
+                // 一般級 7 張牌（8 張胡牌）：1 對 +2 組
+                if (level === 'normal' && totalTiles === 8) {
+                    return this.canWinNormal7(counts);
                 }
-                // 一般級（11 張牌胡牌）：1 對 +3 組
+                // 一般級 10 張牌（11 張胡牌）：1 對 +3 組
                 else if (level === 'normal' && totalTiles === 11) {
-                    return this.canWinNormal(counts);
+                    return this.canWinNormal10(counts);
                 }
                 // 地獄級（17 張牌胡牌）：1 對 +4 組（標準台灣麻將）
                 else if (level === 'hardcore' && totalTiles === 17) {
@@ -1174,14 +1165,12 @@
                 return false;
             }
 
-            // 新手級胡牌檢查（6 張：1 對 +1 組）
-            canWinBeginner(counts) {
-                // 嘗試每種可能的雀頭
+            // 一般級 7 張牌胡牌檢查（8 張：1 對 +2 組）
+            canWinNormal7(counts) {
                 for (let pair = 1; pair <= 9; pair++) {
                     if (counts[pair] >= 2) {
                         counts[pair] -= 2;
-                        // 剩下 4 張牌，需要組成 1 組（刻子或順子）
-                        if (this.canFormOneSet(counts)) {
+                        if (this.canFormSets(counts, 2)) {
                             counts[pair] += 2;
                             return true;
                         }
@@ -1191,8 +1180,8 @@
                 return false;
             }
 
-            // 一般級胡牌檢查（11 張：1 對 +3 組）
-            canWinNormal(counts) {
+            // 一般級 10 張牌胡牌檢查（11 張：1 對 +3 組）
+            canWinNormal10(counts) {
                 for (let pair = 1; pair <= 9; pair++) {
                     if (counts[pair] >= 2) {
                         counts[pair] -= 2;
@@ -1284,38 +1273,36 @@
 
         // 預定義的有效聽牌牌型
         const VALID_PATTERNS = {
-            // 新手級：5 張牌，聽牌後 6 張胡牌（1 對 +1 組）
-            beginner: [
-                { base: [1,1,2,3,4], suit: 'wan' },  // 聽 2,5 萬
-                { base: [2,2,3,4,5], suit: 'wan' },  // 聽 1,4 萬
-                { base: [3,3,4,5,6], suit: 'wan' },  // 聽 2,5 萬
-                { base: [4,4,5,6,7], suit: 'wan' },  // 聽 3,6 萬
-                { base: [5,5,6,7,8], suit: 'wan' },  // 聽 4,7 萬
-                { base: [6,6,7,8,9], suit: 'wan' },  // 聽 5,8 萬
-                { base: [1,1,1,2,3], suit: 'wan' },  // 聽 1,4 萬（刻子 + 順子聽牌）
-                { base: [2,2,2,3,4], suit: 'wan' },  // 聽 2,5 萬
-                { base: [3,3,3,4,5], suit: 'wan' },  // 聽 3,6 萬
-            ],
-            // 一般級：10 張牌，聽牌後 11 張胡牌（1 對 +3 組）
+            // 一般級：7 張或 10 張牌隨機
             normal: [
-                { base: [1,1,1,2,2,2,3,3,4,5], suit: 'wan' },  // 聽 3,6 萬
-                { base: [2,2,2,3,3,3,4,4,5,6], suit: 'wan' },  // 聽 1,4,7 萬
-                { base: [1,1,2,2,3,3,4,4,5,6], suit: 'wan' },  // 聽 3,6 萬
-                { base: [2,2,3,3,4,4,5,5,6,7], suit: 'wan' },  // 聽 1,4,7 萬
-                { base: [1,1,1,2,3,4,5,6,7,8], suit: 'wan' },  // 聽 2,5,8 萬
-                { base: [2,2,2,3,4,5,6,7,8,9], suit: 'wan' },  // 聽 1,4,7 萬
-                { base: [1,1,2,3,4,5,6,7,8,9], suit: 'wan' },  // 聽 1,4,7 萬
-                { base: [1,1,1,2,2,3,3,4,5,6], suit: 'wan' },  // 聽 4,7 萬
+                // 7 張牌（聽牌後 8 張胡牌：1 對 +2 組）
+                { base: [1,1,2,2,3,3,4], suit: 'wan', tiles: 7 },  // 聽 1,4 萬
+                { base: [2,2,3,3,4,4,5], suit: 'wan', tiles: 7 },  // 聽 2,5 萬
+                { base: [3,3,4,4,5,5,6], suit: 'wan', tiles: 7 },  // 聽 3,6 萬
+                { base: [1,1,1,2,3,4,5], suit: 'wan', tiles: 7 },  // 聽 2,5 萬
+                { base: [2,2,2,3,4,5,6], suit: 'wan', tiles: 7 },  // 聽 1,4,7 萬
+                { base: [1,1,2,3,4,5,6], suit: 'wan', tiles: 7 },  // 聽 1,4 萬
+                { base: [1,1,1,2,2,3,4], suit: 'wan', tiles: 7 },  // 聽 1,4 萬
+                { base: [2,2,2,3,3,4,5], suit: 'wan', tiles: 7 },  // 聽 2,5 萬
+                // 10 張牌（聽牌後 11 張胡牌：1 對 +3 組）
+                { base: [1,1,1,2,2,2,3,3,4,5], suit: 'wan', tiles: 10 },  // 聽 3,6 萬
+                { base: [2,2,2,3,3,3,4,4,5,6], suit: 'wan', tiles: 10 },  // 聽 1,4,7 萬
+                { base: [1,1,2,2,3,3,4,4,5,6], suit: 'wan', tiles: 10 },  // 聽 3,6 萬
+                { base: [2,2,3,3,4,4,5,5,6,7], suit: 'wan', tiles: 10 },  // 聽 1,4,7 萬
+                { base: [1,1,1,2,3,4,5,6,7,8], suit: 'wan', tiles: 10 },  // 聽 2,5,8 萬
+                { base: [2,2,2,3,4,5,6,7,8,9], suit: 'wan', tiles: 10 },  // 聽 1,4,7 萬
+                { base: [1,1,2,3,4,5,6,7,8,9], suit: 'wan', tiles: 10 },  // 聽 1,4,7 萬
+                { base: [1,1,1,2,2,3,3,4,5,6], suit: 'wan', tiles: 10 },  // 聽 4,7 萬
             ],
             // 地獄級：16 張牌，聽牌後 17 張胡牌（1 對 +4 組）
             hardcore: [
-                { base: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,6], suit: 'wan' },
-                { base: [2,2,2,3,3,3,4,4,4,5,5,5,6,6,7], suit: 'wan' },
-                { base: [1,1,1,2,3,4,5,6,7,8,9,9,9,9,9], suit: 'wan' },
-                { base: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8], suit: 'wan' },
-                { base: [1,1,1,2,2,3,3,4,4,5,5,6,6,7,7], suit: 'wan' },
-                { base: [1,1,1,2,2,2,3,3,3,4,5,6,7,8,9], suit: 'wan' },
-                { base: [1,2,3,4,5,6,7,8,9,9,9,9,9,9,9], suit: 'wan' },
+                { base: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,6], suit: 'wan', tiles: 16 },
+                { base: [2,2,2,3,3,3,4,4,4,5,5,5,6,6,7], suit: 'wan', tiles: 16 },
+                { base: [1,1,1,2,3,4,5,6,7,8,9,9,9,9,9], suit: 'wan', tiles: 16 },
+                { base: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8], suit: 'wan', tiles: 16 },
+                { base: [1,1,1,2,2,3,3,4,4,5,5,6,6,7,7], suit: 'wan', tiles: 16 },
+                { base: [1,1,1,2,2,2,3,3,3,4,5,6,7,8,9], suit: 'wan', tiles: 16 },
+                { base: [1,2,3,4,5,6,7,8,9,9,9,9,9,9,9], suit: 'wan', tiles: 16 },
             ]
         };
 
@@ -1333,7 +1320,7 @@
                 this.selectedOptions = [];
                 this.usedPatterns = [];
                 this.roundTimes = [];
-                this.currentLevel = 'hardcore'; // 預設地獄級
+                this.currentLevel = 'normal'; // 預設一般級
                 this.selectedPhoto = null;
                 this.isAdmin = false;
             }
@@ -1353,7 +1340,7 @@
                 const levelInfo = LEVELS[level];
                 document.getElementById('current-level-info').innerHTML = `
                     <span style="color: ${levelInfo.color}; font-weight: bold;">${levelInfo.name}</span> - 
-                    <span class="tiles-count">${levelInfo.tiles}張牌</span>
+                    <span class="tiles-count">${levelInfo.tiles}${this.getI18nText('tilesCount')}</span>
                 `;
 
                 // 重新載入該等級的排行榜和冠軍
@@ -1412,7 +1399,8 @@
                 } while ((listening.length === 0 || listening.length > 4) && attempts < 100);
 
                 this.currentPattern = { ...pattern, listening };
-                console.log('Round', this.round, 'Level:', this.currentLevel, 'Tiles:', pattern.tiles, 'Listening:', listening);
+                const tileCount = pattern.tiles.length;
+                console.log('Round', this.round, 'Level:', this.currentLevel, 'Tiles:', tileCount, 'Listening:', listening);
 
                 this.renderTiles();
                 this.renderOptions();
@@ -1831,11 +1819,10 @@
                 title: '🀄 台灣麻將聽牌挑戰',
                 subtitle: '測試你的聽牌判斷能力！',
                 selectLevel: '🎯 選擇遊戲等級',
-                levelBeginner: '新手級',
                 levelNormal: '一般級',
                 levelHardcore: '地獄級',
                 levelInfo: '當前等級：',
-                tilesCount: '張牌',
+                tilesCount: '張牌隨機',
                 rules: '📜 遊戲規則',
                 rule1: '共 <strong>10 回合</strong>，每回合都是<strong>清一色</strong>牌型（萬/筒/條）',
                 rule2: '每回合顯示牌張，判斷聽哪幾張牌',
@@ -1882,11 +1869,10 @@
                 title: '🀄 台湾麻将听牌挑战',
                 subtitle: '测试你的听牌判断能力！',
                 selectLevel: '🎯 选择游戏等级',
-                levelBeginner: '新手级',
                 levelNormal: '一般级',
                 levelHardcore: '地狱级',
                 levelInfo: '当前等级：',
-                tilesCount: '张牌',
+                tilesCount: '张牌随机',
                 rules: '📜 游戏规则',
                 rule1: '共 <strong>10 回合</strong>，每回合都是<strong>清一色</strong>牌型（万/筒/条）',
                 rule2: '每回合显示牌张，判断听哪几张牌',
@@ -1933,11 +1919,10 @@
                 title: '🀄 Mahjong Listening Challenge',
                 subtitle: 'Test your Mahjong skills!',
                 selectLevel: '🎯 Select Level',
-                levelBeginner: 'Beginner',
                 levelNormal: 'Normal',
                 levelHardcore: 'Hardcore',
                 levelInfo: 'Current Level: ',
-                tilesCount: ' tiles',
+                tilesCount: ' tiles (random)',
                 rules: '📜 Game Rules',
                 rule1: '<strong>10 rounds</strong>, each with a <strong>pure suit</strong> hand',
                 rule2: 'Each round shows tiles, guess which tiles complete the hand',
@@ -1984,11 +1969,10 @@
                 title: '🀄 麻雀リーチチャレンジ',
                 subtitle: '麻雀の聴牌判断力をテスト！',
                 selectLevel: '🎯 レベル選択',
-                levelBeginner: '初級',
                 levelNormal: '中級',
                 levelHardcore: '上級',
                 levelInfo: '現在のレベル：',
-                tilesCount: '枚',
+                tilesCount: '枚（ランダム）',
                 rules: '📜 ゲームルール',
                 rule1: '全<strong>10 ラウンド</strong>、各ラウンドは<strong>一色</strong>の手牌',
                 rule2: '各ラウンド牌を表示、聴牌を当てる',
@@ -2127,7 +2111,7 @@
             initLanguage();
             
             // 載入上次選擇的等級
-            const savedLevel = localStorage.getItem('mj_selected_level') || 'hardcore';
+            const savedLevel = localStorage.getItem('mj_selected_level') || 'normal';
             game.selectLevel(savedLevel);
             
             console.log('✅ 載入完成');

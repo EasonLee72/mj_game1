@@ -38,11 +38,10 @@ class FirebaseStorage {
   // 取得等級的 Firebase 路徑
   getLevelPath(level) {
     const levelPaths = {
-      beginner: 'leaderboard_beginner',
       normal: 'leaderboard_normal',
       hardcore: 'leaderboard_hardcore'
     };
-    return levelPaths[level] || levelPaths.hardcore;
+    return levelPaths[level] || levelPaths.normal;
   }
   
   // 讀取排行榜
