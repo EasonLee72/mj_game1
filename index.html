@@ -1096,7 +1096,7 @@
             <div class="admin-actions">
                 <button class="btn danger-btn" onclick="game.showClearLevelMenu()" data-i18n="clearLeaderboard">🗑️ 清除排行榜</button>
                 <button class="btn btn-secondary" onclick="game.showScreen('start-screen')" data-i18n="backToHome">🔙 返回主頁</button>
-                <button class="btn btn-secondary" onclick="game.adminLogout()" data-i18n="logout">登出</button>
+                <button class="btn btn-secondary" onclick="game.adminLogout(); return false;" data-i18n="logout">登出</button>
             </div>
         </div>
     </div>
@@ -1339,7 +1339,7 @@
                 this.isAdmin = false;
             }
 
-            selectLevel(level) {
+            async selectLevel(level) {
                 this.currentLevel = level;
                 
                 // 更新按鈕狀態
@@ -1358,8 +1358,8 @@
                 `;
 
                 // 重新載入該等級的排行榜和冠軍
-                this.renderLeaderboard('leaderboard-body');
-                this.renderChampionPortrait();
+                await this.renderLeaderboard('leaderboard-body');
+                await this.renderChampionPortrait();
 
                 // 儲存選擇
                 localStorage.setItem('mj_selected_level', level);
@@ -1674,15 +1674,16 @@
                 }
 
                 this.closeModal();
-                this.renderLeaderboard('final-leaderboard-body');
-                this.renderChampionPortrait();
+                await this.renderLeaderboard('final-leaderboard-body');
+                await this.renderChampionPortrait();
                 
                 alert('✅ 成績已儲存到雲端！');
             }
 
-            renderLeaderboard(elementId) {
+            async renderLeaderboard(elementId) {
                 const tbody = document.getElementById(elementId);
-                const leaderboard = firebaseStorage.getLocalLeaderboard(this.currentLevel);
+                // 從 Firebase 載入排行榜
+                const leaderboard = await firebaseStorage.fetchLeaderboard(this.currentLevel);
                 
                 if (leaderboard.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="5">${this.getI18nText('noRecord')}</td></tr>`;
@@ -1705,18 +1706,18 @@
                 this.start();
             }
 
-            goHome() {
+            async goHome() {
                 this.showScreen('start-screen');
-                this.renderLeaderboard('leaderboard-body');
-                this.renderChampionPortrait();
+                await this.renderLeaderboard('leaderboard-body');
+                await this.renderChampionPortrait();
             }
 
-            clearLeaderboard() {
+            async clearLeaderboard() {
                 if (confirm('確定要清除所有排行榜分數和冠軍照片嗎？\n\n此操作無法復原！')) {
                     localStorage.removeItem('mj_leaderboard_' + this.currentLevel);
                     localStorage.removeItem('mj_champion_photo_' + this.currentLevel);
-                    this.renderLeaderboard('leaderboard-body');
-                    this.renderChampionPortrait();
+                    await this.renderLeaderboard('leaderboard-body');
+                    await this.renderChampionPortrait();
                     alert('✅ 排行榜已清除！');
                 }
             }
@@ -1780,11 +1781,11 @@
                 }
             }
 
-            adminLogout() {
+            async adminLogout() {
                 this.isAdmin = false;
                 this.showScreen('start-screen');
-                this.renderLeaderboard('leaderboard-body');
-                this.renderChampionPortrait();
+                await this.renderLeaderboard('leaderboard-body');
+                await this.renderChampionPortrait();
             }
 
             updateAdminPanel() {
@@ -2144,9 +2145,9 @@
             
             // 載入上次選擇的等級
             const savedLevel = localStorage.getItem('mj_selected_level') || 'normal';
-            game.selectLevel(savedLevel);
+            await game.selectLevel(savedLevel);
             
-            console.log('✅ 載入完成');
+            console.log('✅ 載入完成，排行榜已從 Firebase 載入');
         });
 
         document.getElementById('player-name').addEventListener('keypress', (e) => {
