@@ -219,28 +219,31 @@
         /* Mahjong Tiles */
         .tiles-container {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             justify-content: center;
-            gap: 15px;
-            padding: 35px;
+            gap: 10px;
+            padding: 20px;
             background: rgba(0,0,0,0.25);
             border-radius: 15px;
-            margin: 20px 0;
-            min-height: 260px;
+            margin: 20px auto;
+            min-height: 180px;
             align-items: center;
+            max-width: 800px;
+            overflow: visible;
         }
 
         .tile {
-            width: 90px;
-            height: 126px;
+            width: 45px;
+            height: 63px;
             background: #fff;
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
             border: 2px solid #d4c4a8;
             position: relative;
+            flex-shrink: 0;
         }
 
         .tile img {
@@ -250,21 +253,31 @@
             image-rendering: -webkit-optimize-contrast;
         }
         
-        /* 手機橫屏優化 - 牌型顯示在一行，不需滑動 */
-        @media screen and (max-height: 500px) and (orientation: landscape) {
+        /* 手機版優化 */
+        @media (max-width: 600px) {
             .tiles-container {
-                flex-wrap: nowrap;
-                overflow: visible;
-                padding: 10px 5px;
-                gap: 3px;
-                min-height: 90px;
-                justify-content: flex-start;
+                gap: 5px;
+                padding: 15px;
+                max-width: 100%;
             }
             
             .tile {
-                width: 48px;
-                height: 67px;
-                flex-shrink: 1;
+                width: 35px;
+                height: 49px;
+            }
+        }
+        
+        /* 手機橫屏優化 - 牌型顯示在一行，不需滑動 */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            .tiles-container {
+                gap: 2px;
+                padding: 5px;
+                min-height: 60px;
+            }
+            
+            .tile {
+                width: 30px;
+                height: 42px;
             }
             
             .header h1 {
@@ -983,8 +996,8 @@
                 </div>
 
                 <div style="margin: 30px 0;">
-                    <p style="font-size: 1.3em;" data-i18n="correct">正確：<span id="final-correct" style="color: #4CAF50; font-weight: bold;">0</span>/10</p>
-                    <p style="font-size: 1.3em;" data-i18n="time">總時間：<span id="final-time" style="color: #ffd700; font-weight: bold;">00:00</span></p>
+                    <p style="font-size: 1.3em;"><span data-i18n="correctLabel">正確</span>：<span id="final-correct" style="color: #4CAF50; font-weight: bold;">0</span>/10</p>
+                    <p style="font-size: 1.3em;"><span data-i18n="totalTimeLabel">總時間</span>：<span id="final-time" style="color: #ffd700; font-weight: bold;">00:00</span></p>
                 </div>
 
                 <div class="leaderboard">
@@ -1837,6 +1850,8 @@
                 score: '分數',
                 correct: '答對',
                 time: '時間',
+                correctLabel: '正確',
+                totalTimeLabel: '總時間',
                 noRecord: '暫無記錄',
                 startGame: '🎮 開始遊戲',
                 adminLogin: '🔧 管理員登入',
@@ -1887,6 +1902,8 @@
                 score: '分数',
                 correct: '答对',
                 time: '时间',
+                correctLabel: '正确',
+                totalTimeLabel: '总时间',
                 noRecord: '暂无记录',
                 startGame: '🎮 开始游戏',
                 adminLogin: '🔧 管理员登入',
@@ -1937,6 +1954,8 @@
                 score: 'Score',
                 correct: 'Correct',
                 time: 'Time',
+                correctLabel: 'Correct',
+                totalTimeLabel: 'Total Time',
                 noRecord: 'No records yet',
                 startGame: '🎮 Start Game',
                 adminLogin: '🔧 Admin Login',
@@ -1987,6 +2006,8 @@
                 score: 'スコア',
                 correct: '正解',
                 time: '時間',
+                correctLabel: '正解',
+                totalTimeLabel: '合計時間',
                 noRecord: '記録なし',
                 startGame: '🎮 ゲーム開始',
                 adminLogin: '🔧 管理者ログイン',
