@@ -1714,6 +1714,10 @@
 
             async clearLeaderboard() {
                 if (confirm('確定要清除所有排行榜分數和冠軍照片嗎？\n\n此操作無法復原！')) {
+                    // 清除 Firebase 數據
+                    await firebaseStorage.saveLeaderboard([], this.currentLevel);
+                    await firebaseStorage.saveChampionPhoto(null, this.currentLevel);
+                    // 同時清除本地備份
                     localStorage.removeItem('mj_leaderboard_' + this.currentLevel);
                     localStorage.removeItem('mj_champion_photo_' + this.currentLevel);
                     await this.renderLeaderboard('leaderboard-body');
@@ -1806,23 +1810,35 @@
                 }
             }
 
-            showClearLevelMenu() {
-                const level = prompt('要清除哪個等級的排行榜？\n輸入：beginner（新手級）、normal（一般級）、hardcore（地獄級）、all（全部）', 'all');
+            async showClearLevelMenu() {
+                const level = prompt('要清除哪個等級的排行榜？\n輸入：normal（一般級）、hardcore（地獄級）、all（全部）', 'all');
                 if (!level) return;
                 
                 if (level === 'all') {
-                    if (confirm('確定要清除所有三個等級的排行榜嗎？')) {
-                        ['beginner', 'normal', 'hardcore'].forEach(l => {
+                    if (confirm('確定要清除所有等級的排行榜嗎？')) {
+                        // 清除 Firebase 數據
+                        for (const l of ['normal', 'hardcore']) {
+                            await firebaseStorage.saveLeaderboard([], l);
+                            await firebaseStorage.saveChampionPhoto(null, l);
+                            // 同時清除本地備份
                             localStorage.removeItem('mj_leaderboard_' + l);
                             localStorage.removeItem('mj_champion_photo_' + l);
-                        });
+                        }
                         alert('✅ 所有排行榜已清除！');
+                        await this.renderLeaderboard('leaderboard-body');
+                        await this.renderChampionPortrait();
                     }
                 } else if (LEVELS[level]) {
                     if (confirm(`確定要清除 ${LEVELS[level].name} 的排行榜嗎？`)) {
+                        // 清除 Firebase 數據
+                        await firebaseStorage.saveLeaderboard([], level);
+                        await firebaseStorage.saveChampionPhoto(null, level);
+                        // 同時清除本地備份
                         localStorage.removeItem('mj_leaderboard_' + level);
                         localStorage.removeItem('mj_champion_photo_' + level);
                         alert(`✅ ${LEVELS[level].name} 排行榜已清除！`);
+                        await this.renderLeaderboard('leaderboard-body');
+                        await this.renderChampionPortrait();
                     }
                 } else {
                     alert('❌ 無效的等級名稱');

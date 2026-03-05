@@ -128,19 +128,20 @@ class FirebaseStorage {
       await this.init();
       const url = `${this.dbUrl}/championPhoto_${level}.json`;
       
+      // 如果 photoDataUrl 為 null，則刪除照片
       const response = await fetch(url, {
-        method: 'PUT',
+        method: photoDataUrl === null ? 'DELETE' : 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(photoDataUrl)
+        body: photoDataUrl === null ? null : JSON.stringify(photoDataUrl)
       });
       
-      if (!response.ok) {
+      if (!response.ok && response.status !== 404) {
         throw new Error(`HTTP ${response.status}`);
       }
       
-      console.log('✅ 冠軍照片已儲存到 Firebase (' + level + ')');
+      console.log('✅ 冠軍照片已' + (photoDataUrl === null ? '清除' : '儲存到 Firebase') + ' (' + level + ')');
       
       // 同時儲存到本地作為備份
       this.saveLocalChampionPhoto(photoDataUrl, level);
