@@ -35,11 +35,22 @@ class FirebaseStorage {
     }
   }
   
+  // 取得等級的 Firebase 路徑
+  getLevelPath(level) {
+    const levelPaths = {
+      beginner: 'leaderboard_beginner',
+      normal: 'leaderboard_normal',
+      hardcore: 'leaderboard_hardcore'
+    };
+    return levelPaths[level] || levelPaths.hardcore;
+  }
+  
   // 讀取排行榜
-  async fetchLeaderboard() {
+  async fetchLeaderboard(level = 'hardcore') {
     try {
       await this.init();
-      const url = `${this.dbUrl}/leaderboard.json?t=${Date.now()}`;
+      const path = this.getLevelPath(level);
+      const url = `${this.dbUrl}/${path}.json?t=${Date.now()}`;
       const response = await fetch(url);
       
       if (!response.ok) {
@@ -54,19 +65,20 @@ class FirebaseStorage {
       
       // 轉換物件為陣列
       const leaderboard = Object.values(data);
-      console.log('✅ 從 Firebase 載入排行榜:', leaderboard.length, '筆資料');
+      console.log('✅ 從 Firebase 載入排行榜 (' + level + '):', leaderboard.length, '筆資料');
       return leaderboard;
     } catch (error) {
       console.error('讀取排行榜失敗:', error);
-      return this.getLocalLeaderboard();
+      return this.getLocalLeaderboard(level);
     }
   }
   
   // 儲存排行榜
-  async saveLeaderboard(leaderboard) {
+  async saveLeaderboard(leaderboard, level = 'hardcore') {
     try {
       await this.init();
-      const url = `${this.dbUrl}/leaderboard.json`;
+      const path = this.getLevelPath(level);
+      const url = `${this.dbUrl}/${path}.json`;
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -80,23 +92,23 @@ class FirebaseStorage {
         throw new Error(`HTTP ${response.status}`);
       }
       
-      console.log('✅ 排行榜已儲存到 Firebase');
+      console.log('✅ 排行榜已儲存到 Firebase (' + level + ')');
       
       // 同時儲存到本地作為備份
-      this.saveLocalLeaderboard(leaderboard);
+      this.saveLocalLeaderboard(leaderboard, level);
       
       return true;
     } catch (error) {
       console.error('儲存排行榜失敗:', error);
-      return this.saveLocalLeaderboard(leaderboard);
+      return this.saveLocalLeaderboard(leaderboard, level);
     }
   }
   
   // 讀取冠軍照片
-  async fetchChampionPhoto() {
+  async fetchChampionPhoto(level = 'hardcore') {
     try {
       await this.init();
-      const url = `${this.dbUrl}/championPhoto.json?t=${Date.now()}`;
+      const url = `${this.dbUrl}/championPhoto_${level}.json?t=${Date.now()}`;
       const response = await fetch(url);
       
       if (!response.ok) {
@@ -107,15 +119,15 @@ class FirebaseStorage {
       return data;
     } catch (error) {
       console.error('讀取冠軍照片失敗:', error);
-      return this.getLocalChampionPhoto();
+      return this.getLocalChampionPhoto(level);
     }
   }
   
   // 儲存冠軍照片
-  async saveChampionPhoto(photoDataUrl) {
+  async saveChampionPhoto(photoDataUrl, level = 'hardcore') {
     try {
       await this.init();
-      const url = `${this.dbUrl}/championPhoto.json`;
+      const url = `${this.dbUrl}/championPhoto_${level}.json`;
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -129,43 +141,43 @@ class FirebaseStorage {
         throw new Error(`HTTP ${response.status}`);
       }
       
-      console.log('✅ 冠軍照片已儲存到 Firebase');
+      console.log('✅ 冠軍照片已儲存到 Firebase (' + level + ')');
       
       // 同時儲存到本地作為備份
-      this.saveLocalChampionPhoto(photoDataUrl);
+      this.saveLocalChampionPhoto(photoDataUrl, level);
       
       return true;
     } catch (error) {
       console.error('儲存冠軍照片失敗:', error);
-      return this.saveLocalChampionPhoto(photoDataUrl);
+      return this.saveLocalChampionPhoto(photoDataUrl, level);
     }
   }
   
   // 本地備援方法
-  getLocalLeaderboard() {
+  getLocalLeaderboard(level = 'hardcore') {
     try {
-      return JSON.parse(localStorage.getItem('mj_leaderboard') || '[]');
+      return JSON.parse(localStorage.getItem('mj_leaderboard_' + level) || '[]');
     } catch (e) {
       return [];
     }
   }
   
-  saveLocalLeaderboard(leaderboard) {
+  saveLocalLeaderboard(leaderboard, level = 'hardcore') {
     try {
-      localStorage.setItem('mj_leaderboard', JSON.stringify(leaderboard));
+      localStorage.setItem('mj_leaderboard_' + level, JSON.stringify(leaderboard));
       return true;
     } catch (e) {
       return false;
     }
   }
   
-  getLocalChampionPhoto() {
-    return localStorage.getItem('mj_champion_photo');
+  getLocalChampionPhoto(level = 'hardcore') {
+    return localStorage.getItem('mj_champion_photo_' + level);
   }
   
-  saveLocalChampionPhoto(photoDataUrl) {
+  saveLocalChampionPhoto(photoDataUrl, level = 'hardcore') {
     try {
-      localStorage.setItem('mj_champion_photo', photoDataUrl);
+      localStorage.setItem('mj_champion_photo_' + level, photoDataUrl);
       return true;
     } catch (e) {
       return false;
