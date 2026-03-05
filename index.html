@@ -1128,7 +1128,7 @@
             }
 
             // 檢查是否為有效的聽牌牌型
-            checkListening(tiles, suit) {
+            checkListening(tiles, suit, level) {
                 const counts = {};
                 for (let i = 1; i <= 9; i++) counts[i] = 0;
                 tiles.forEach(t => counts[t]++);
@@ -1143,23 +1143,45 @@
                     if (counts[test] >= 4) continue;
 
                     const testTiles = [...tiles, test];
-                    if (this.canWin(testTiles)) {
+                    if (this.canWin(testTiles, level)) {
                         listening.push(test);
                     }
                 }
                 return listening;
             }
 
-            // 檢查是否能胡牌
-            canWin(tiles) {
+            // 檢查是否能胡牌（根據等級調整胡牌規則）
+            canWin(tiles, level) {
                 const counts = {};
                 for (let i = 1; i <= 9; i++) counts[i] = 0;
                 tiles.forEach(t => counts[t]++);
 
+                const totalTiles = tiles.length;
+                
+                // 新手級（6 張牌胡牌）：1 對 +1 組
+                if (level === 'beginner' && totalTiles === 6) {
+                    return this.canWinBeginner(counts);
+                }
+                // 一般級（11 張牌胡牌）：1 對 +3 組
+                else if (level === 'normal' && totalTiles === 11) {
+                    return this.canWinNormal(counts);
+                }
+                // 地獄級（17 張牌胡牌）：1 對 +4 組（標準台灣麻將）
+                else if (level === 'hardcore' && totalTiles === 17) {
+                    return this.canWinHardcore(counts);
+                }
+                
+                return false;
+            }
+
+            // 新手級胡牌檢查（6 張：1 對 +1 組）
+            canWinBeginner(counts) {
+                // 嘗試每種可能的雀頭
                 for (let pair = 1; pair <= 9; pair++) {
                     if (counts[pair] >= 2) {
                         counts[pair] -= 2;
-                        if (this.canFormSets(counts)) {
+                        // 剩下 4 張牌，需要組成 1 組（刻子或順子）
+                        if (this.canFormOneSet(counts)) {
                             counts[pair] += 2;
                             return true;
                         }
@@ -1169,10 +1191,58 @@
                 return false;
             }
 
-            // 檢查是否能組成面子
-            canFormSets(counts) {
+            // 一般級胡牌檢查（11 張：1 對 +3 組）
+            canWinNormal(counts) {
+                for (let pair = 1; pair <= 9; pair++) {
+                    if (counts[pair] >= 2) {
+                        counts[pair] -= 2;
+                        if (this.canFormSets(counts, 3)) {
+                            counts[pair] += 2;
+                            return true;
+                        }
+                        counts[pair] += 2;
+                    }
+                }
+                return false;
+            }
+
+            // 地獄級胡牌檢查（17 張：1 對 +4 組）
+            canWinHardcore(counts) {
+                for (let pair = 1; pair <= 9; pair++) {
+                    if (counts[pair] >= 2) {
+                        counts[pair] -= 2;
+                        if (this.canFormSets(counts, 4)) {
+                            counts[pair] += 2;
+                            return true;
+                        }
+                        counts[pair] += 2;
+                    }
+                }
+                return false;
+            }
+
+            // 檢查是否能組成 1 組（新手級用）
+            canFormOneSet(counts) {
+                // 嘗試刻子
+                for (let i = 1; i <= 9; i++) {
+                    if (counts[i] >= 3) {
+                        return true;
+                    }
+                }
+                // 嘗試順子
+                for (let i = 1; i <= 7; i++) {
+                    if (counts[i] >= 1 && counts[i + 1] >= 1 && counts[i + 2] >= 1) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // 檢查是否能組成指定數量的面子
+            canFormSets(counts, setsNeeded) {
                 const total = Object.values(counts).reduce((a, b) => a + b, 0);
-                if (total === 0) return true;
+                if (total === 0) return setsNeeded === 0;
+                if (setsNeeded <= 0) return false;
 
                 let first = -1;
                 for (let i = 1; i <= 9; i++) {
@@ -1182,20 +1252,22 @@
                     }
                 }
 
+                // 優先嘗試刻子
                 if (counts[first] >= 3) {
                     counts[first] -= 3;
-                    if (this.canFormSets(counts)) {
+                    if (this.canFormSets(counts, setsNeeded - 1)) {
                         counts[first] += 3;
                         return true;
                     }
                     counts[first] += 3;
                 }
 
+                // 嘗試順子
                 if (first <= 7 && counts[first] >= 1 && counts[first + 1] >= 1 && counts[first + 2] >= 1) {
                     counts[first]--;
                     counts[first + 1]--;
                     counts[first + 2]--;
-                    if (this.canFormSets(counts)) {
+                    if (this.canFormSets(counts, setsNeeded - 1)) {
                         counts[first]++;
                         counts[first + 1]++;
                         counts[first + 2]++;
@@ -1212,26 +1284,38 @@
 
         // 預定義的有效聽牌牌型
         const VALID_PATTERNS = {
+            // 新手級：5 張牌，聽牌後 6 張胡牌（1 對 +1 組）
             beginner: [
-                { base: [1,1,1,2,3], suit: 'wan' },
-                { base: [2,2,2,3,4], suit: 'wan' },
-                { base: [1,1,2,3,4], suit: 'wan' },
-                { base: [1,2,3,4,5], suit: 'wan' },
-                { base: [5,5,5,6,7], suit: 'wan' },
+                { base: [1,1,2,3,4], suit: 'wan' },  // 聽 2,5 萬
+                { base: [2,2,3,4,5], suit: 'wan' },  // 聽 1,4 萬
+                { base: [3,3,4,5,6], suit: 'wan' },  // 聽 2,5 萬
+                { base: [4,4,5,6,7], suit: 'wan' },  // 聽 3,6 萬
+                { base: [5,5,6,7,8], suit: 'wan' },  // 聽 4,7 萬
+                { base: [6,6,7,8,9], suit: 'wan' },  // 聽 5,8 萬
+                { base: [1,1,1,2,3], suit: 'wan' },  // 聽 1,4 萬（刻子 + 順子聽牌）
+                { base: [2,2,2,3,4], suit: 'wan' },  // 聽 2,5 萬
+                { base: [3,3,3,4,5], suit: 'wan' },  // 聽 3,6 萬
             ],
+            // 一般級：10 張牌，聽牌後 11 張胡牌（1 對 +3 組）
             normal: [
-                { base: [1,1,1,2,2,3,3,4,4,5], suit: 'wan' },
-                { base: [1,1,2,2,3,3,4,4,5,5], suit: 'wan' },
-                { base: [1,1,1,2,3,4,5,6,7,8], suit: 'wan' },
-                { base: [2,2,2,3,3,3,4,4,4,5], suit: 'wan' },
-                { base: [1,2,3,4,5,6,7,8,9,9], suit: 'wan' },
+                { base: [1,1,1,2,2,2,3,3,4,5], suit: 'wan' },  // 聽 3,6 萬
+                { base: [2,2,2,3,3,3,4,4,5,6], suit: 'wan' },  // 聽 1,4,7 萬
+                { base: [1,1,2,2,3,3,4,4,5,6], suit: 'wan' },  // 聽 3,6 萬
+                { base: [2,2,3,3,4,4,5,5,6,7], suit: 'wan' },  // 聽 1,4,7 萬
+                { base: [1,1,1,2,3,4,5,6,7,8], suit: 'wan' },  // 聽 2,5,8 萬
+                { base: [2,2,2,3,4,5,6,7,8,9], suit: 'wan' },  // 聽 1,4,7 萬
+                { base: [1,1,2,3,4,5,6,7,8,9], suit: 'wan' },  // 聽 1,4,7 萬
+                { base: [1,1,1,2,2,3,3,4,5,6], suit: 'wan' },  // 聽 4,7 萬
             ],
+            // 地獄級：16 張牌，聽牌後 17 張胡牌（1 對 +4 組）
             hardcore: [
                 { base: [1,1,1,2,2,2,3,3,3,4,4,4,5,5,6], suit: 'wan' },
                 { base: [2,2,2,3,3,3,4,4,4,5,5,5,6,6,7], suit: 'wan' },
                 { base: [1,1,1,2,3,4,5,6,7,8,9,9,9,9,9], suit: 'wan' },
                 { base: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8], suit: 'wan' },
                 { base: [1,1,1,2,2,3,3,4,4,5,5,6,6,7,7], suit: 'wan' },
+                { base: [1,1,1,2,2,2,3,3,3,4,5,6,7,8,9], suit: 'wan' },
+                { base: [1,2,3,4,5,6,7,8,9,9,9,9,9,9,9], suit: 'wan' },
             ]
         };
 
@@ -1323,7 +1407,7 @@
                 do {
                     const preset = levelPatterns[Math.floor(Math.random() * levelPatterns.length)];
                     pattern = { tiles: [...preset.base], suit: preset.suit };
-                    listening = checker.checkListening(pattern.tiles, pattern.suit);
+                    listening = checker.checkListening(pattern.tiles, pattern.suit, this.currentLevel);
                     attempts++;
                 } while ((listening.length === 0 || listening.length > 4) && attempts < 100);
 
