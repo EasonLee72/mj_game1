@@ -1399,7 +1399,7 @@
                 document.getElementById('submit-btn').disabled = true;
                 document.getElementById('next-btn').style.display = 'none';
 
-                // 生成有效的聽牌牌型
+                // 生成有效的聽牌牌型（不重複）
                 let pattern;
                 let listening;
                 let attempts = 0;
@@ -1409,12 +1409,22 @@
                     const preset = levelPatterns[Math.floor(Math.random() * levelPatterns.length)];
                     pattern = { tiles: [...preset.base], suit: preset.suit };
                     listening = checker.checkListening(pattern.tiles, pattern.suit, this.currentLevel);
+                    
+                    // 檢查是否重複
+                    const patternKey = pattern.tiles.join(',') + '_' + pattern.suit;
+                    const isDuplicate = this.usedPatterns.includes(patternKey);
+                    
+                    if (!isDuplicate && listening.length > 0 && listening.length <= 4) {
+                        this.usedPatterns.push(patternKey);
+                        break;
+                    }
+                    
                     attempts++;
-                } while ((listening.length === 0 || listening.length > 4) && attempts < 100);
+                } while (attempts < 500);
 
                 this.currentPattern = { ...pattern, listening };
                 const tileCount = pattern.tiles.length;
-                console.log('Round', this.round, 'Level:', this.currentLevel, 'Tiles:', tileCount, 'Listening:', listening);
+                console.log('Round', this.round, 'Level:', this.currentLevel, 'Tiles:', tileCount, 'Listening:', listening, 'Used:', this.usedPatterns.length);
 
                 this.renderTiles();
                 this.renderOptions();
