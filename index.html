@@ -1729,7 +1729,8 @@
             async renderChampionPortrait() {
                 const championPhoto = await firebaseStorage.fetchChampionPhoto(this.currentLevel) || 
                                       localStorage.getItem('mj_champion_photo_' + this.currentLevel);
-                const leaderboard = firebaseStorage.getLocalLeaderboard(this.currentLevel);
+                // 從 Firebase 載入排行榜，確保不同瀏覽器能看到一樣的冠軍
+                const leaderboard = await firebaseStorage.fetchLeaderboard(this.currentLevel);
                 
                 const photoEl = document.getElementById('champion-photo');
                 const placeholderEl = document.getElementById('champion-placeholder');
