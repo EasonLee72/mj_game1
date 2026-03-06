@@ -1340,22 +1340,51 @@
             }
 
             async selectLevel(level, skipConfirm = false) {
+                // 先設置等級
+                this.currentLevel = level;
+                
                 // 如果不是跳過確認，則顯示確認視窗
                 if (!skipConfirm) {
                     const levelInfo = LEVELS[level];
                     const confirmed = confirm(`確定要進入${levelInfo.name}嗎？\n\n${levelInfo.description}`);
                     
                     if (!confirmed) {
+                        // 如果取消，恢復按鈕狀態和等級
+                        this.currentLevel = localStorage.getItem('mj_selected_level') || 'normal';
+                        // 恢復按鈕狀態
+                        document.querySelectorAll('.level-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                            if (btn.dataset.level === this.currentLevel) {
+                                btn.classList.add('active');
+                            }
+                        });
                         return;
                     }
                     
-                    // 確認後直接開始遊戲
+                    // 確認後先更新 UI，再開始遊戲
+                    // 更新按鈕狀態
+                    document.querySelectorAll('.level-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.dataset.level === level) {
+                            btn.classList.add('active');
+                        }
+                    });
+
+                    // 更新等級資訊
+                    document.getElementById('current-level-info').innerHTML = `
+                        <span style="color: ${levelInfo.color}; font-weight: bold;">${levelInfo.name}</span> - 
+                        <span class="tiles-count">${levelInfo.tiles}${this.getI18nText('tilesCount')}</span>
+                    `;
+
+                    // 儲存選擇
+                    localStorage.setItem('mj_selected_level', level);
+                    
+                    // 開始遊戲
                     this.startGameFromLevelSelect();
                     return;
                 }
                 
                 // 頁面載入時只更新 UI，不開始遊戲
-                this.currentLevel = level;
                 
                 // 更新按鈕狀態
                 document.querySelectorAll('.level-btn').forEach(btn => {
