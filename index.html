@@ -1339,13 +1339,15 @@
                 this.isAdmin = false;
             }
 
-            async selectLevel(level) {
-                // 顯示確認視窗
-                const levelInfo = LEVELS[level];
-                const confirmed = confirm(`確定要進入${levelInfo.name}嗎？\n\n${levelInfo.description}`);
-                
-                if (!confirmed) {
-                    return;
+            async selectLevel(level, skipConfirm = false) {
+                // 如果不是跳過確認，則顯示確認視窗
+                if (!skipConfirm) {
+                    const levelInfo = LEVELS[level];
+                    const confirmed = confirm(`確定要進入${levelInfo.name}嗎？\n\n${levelInfo.description}`);
+                    
+                    if (!confirmed) {
+                        return;
+                    }
                 }
                 
                 this.currentLevel = level;
@@ -1359,6 +1361,7 @@
                 });
 
                 // 更新等級資訊
+                const levelInfo = LEVELS[level];
                 document.getElementById('current-level-info').innerHTML = `
                     <span style="color: ${levelInfo.color}; font-weight: bold;">${levelInfo.name}</span> - 
                     <span class="tiles-count">${levelInfo.tiles}${this.getI18nText('tilesCount')}</span>
@@ -2172,9 +2175,9 @@
         document.addEventListener('DOMContentLoaded', async () => {
             initLanguage();
             
-            // 載入上次選擇的等級
+            // 載入上次選擇的等級（不顯示確認視窗）
             const savedLevel = localStorage.getItem('mj_selected_level') || 'normal';
-            await game.selectLevel(savedLevel);
+            await game.selectLevel(savedLevel, true); // skipConfirm = true
             
             console.log('✅ 載入完成，排行榜已從 Firebase 載入');
         });
