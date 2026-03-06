@@ -913,7 +913,7 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="game.start()" data-i18n="startGame">🎮 開始遊戲</button>
+                    <button class="btn btn-primary" onclick="game.startGameFromLevelSelect()" data-i18n="startGame">🎮 開始遊戲</button>
                 </div>
 
                 <div class="admin-link">
@@ -1348,8 +1348,13 @@
                     if (!confirmed) {
                         return;
                     }
+                    
+                    // 確認後直接開始遊戲
+                    this.startGameFromLevelSelect();
+                    return;
                 }
                 
+                // 頁面載入時只更新 UI，不開始遊戲
                 this.currentLevel = level;
                 
                 // 更新按鈕狀態
@@ -1373,6 +1378,23 @@
 
                 // 儲存選擇
                 localStorage.setItem('mj_selected_level', level);
+            }
+
+            startGameFromLevelSelect() {
+                this.round = 0;
+                this.score = 0;
+                this.correctCount = 0;
+                this.totalTime = 0;
+                this.usedPatterns = [];
+                this.roundTimes = [];
+                this.showScreen('game-screen');
+                
+                // 更新遊戲畫面的等級顯示
+                const levelInfo = LEVELS[this.currentLevel];
+                document.getElementById('level-display').textContent = levelInfo.name;
+                document.getElementById('level-display').style.color = levelInfo.color;
+                
+                this.nextRound();
             }
 
             start() {
