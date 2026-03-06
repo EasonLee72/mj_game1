@@ -280,18 +280,37 @@
             }
             
             .tiles-container {
-                gap: 2px;
-                padding: 5px;
-                width: 100%;
+                gap: 4px;
+                padding: 10px;
                 max-width: 100%;
                 margin: 10px 0;
-                box-sizing: border-box;
+                /* 允許橫向滾動 */
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                /* 顯示滾動條 */
+                scrollbar-width: thin;
+                scrollbar-color: rgba(255,215,0,0.5) rgba(0,0,0,0.3);
             }
             
-            /* 手機版 - 固定小尺寸確保完全顯示 */
+            /* 自定義滾動條樣式 */
+            .tiles-container::-webkit-scrollbar {
+                height: 6px;
+            }
+            
+            .tiles-container::-webkit-scrollbar-track {
+                background: rgba(0,0,0,0.3);
+                border-radius: 3px;
+            }
+            
+            .tiles-container::-webkit-scrollbar-thumb {
+                background: rgba(255,215,0,0.5);
+                border-radius: 3px;
+            }
+            
+            /* 手機版 - 固定尺寸，可滾動查看 */
             .tile {
-                width: 12px;
-                height: 17px;
+                width: 28px;
+                height: 40px;
                 border-width: 1px;
                 flex-shrink: 0;
             }
