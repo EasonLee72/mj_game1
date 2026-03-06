@@ -1629,10 +1629,8 @@
                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 const isPortrait = window.innerHeight > window.innerWidth;
                 
-                // 地獄級 17 張牌才需要提示
-                const needHint = this.currentLevel === 'hardcore';
-                
-                if (isMobile && isPortrait && needHint) {
+                // 所有等級都需要提示
+                if (isMobile && isPortrait) {
                     hintEl.style.display = 'block';
                 } else {
                     hintEl.style.display = 'none';
