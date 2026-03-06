@@ -320,6 +320,17 @@
                 height: 100%;
             }
             
+            /* 答題區的牌 - 手機版 */
+            .option-tile {
+                width: 32px;
+                height: 45px;
+            }
+            
+            .option-btn {
+                padding: 5px;
+                min-width: 40px;
+            }
+            
             .header h1 {
                 font-size: 1.5em;
             }
@@ -427,28 +438,38 @@
         }
 
         .option-btn {
-            padding: 10px 18px;
-            font-size: 1.1em;
-            min-width: 80px;
+            padding: 8px;
             background: linear-gradient(145deg, #f0d9b5 0%, #e0c095 100%);
             border: 2px solid #b8956a;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.15s ease;
-            font-family: inherit;
-            font-weight: bold;
-            color: #3d3d3d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 50px;
         }
 
         .option-btn:hover {
             background: linear-gradient(145deg, #f5e0c0 0%, #e5c8a0 100%);
-            transform: scale(1.03);
+            transform: scale(1.05);
         }
 
         .option-btn.selected {
             background: linear-gradient(145deg, #5cb85c 0%, #449d44 100%);
-            color: white;
             border-color: #398439;
+        }
+
+        .option-btn.selected .tile {
+            box-shadow: 0 0 15px rgba(255,215,0,0.6);
+            border-color: #ffd700;
+        }
+
+        /* 答題區的牌 */
+        .option-tile {
+            width: 40px;
+            height: 56px;
+            margin: 0;
         }
 
         /* Action Buttons */
@@ -1678,7 +1699,24 @@
                 options.forEach(num => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
-                    btn.innerHTML = `${this.getNumberDisplay(num)} ${SUITS[this.currentPattern.suit].name}`;
+                    btn.dataset.num = num;
+                    
+                    // 建立牌圖片
+                    const tile = document.createElement('div');
+                    tile.className = 'tile option-tile';
+                    
+                    const img = document.createElement('img');
+                    let suitPrefix = '';
+                    if (this.currentPattern.suit === 'wan') suitPrefix = 'm';
+                    else if (this.currentPattern.suit === 'tong') suitPrefix = 'p';
+                    else if (this.currentPattern.suit === 'tiao') suitPrefix = 's';
+                    
+                    img.src = `tiles/${suitPrefix}${num}.png`;
+                    img.alt = `${this.currentPattern.suit}${num}`;
+                    
+                    tile.appendChild(img);
+                    btn.appendChild(tile);
+                    
                     btn.onclick = () => this.toggleOption(num, btn);
                     container.appendChild(btn);
                 });
