@@ -1340,6 +1340,14 @@
             }
 
             async selectLevel(level) {
+                // 顯示確認視窗
+                const levelInfo = LEVELS[level];
+                const confirmed = confirm(`確定要進入${levelInfo.name}嗎？\n\n${levelInfo.description}`);
+                
+                if (!confirmed) {
+                    return;
+                }
+                
                 this.currentLevel = level;
                 
                 // 更新按鈕狀態
@@ -1351,7 +1359,6 @@
                 });
 
                 // 更新等級資訊
-                const levelInfo = LEVELS[level];
                 document.getElementById('current-level-info').innerHTML = `
                     <span style="color: ${levelInfo.color}; font-weight: bold;">${levelInfo.name}</span> - 
                     <span class="tiles-count">${levelInfo.tiles}${this.getI18nText('tilesCount')}</span>
@@ -1404,10 +1411,15 @@
                 let listening;
                 let attempts = 0;
                 
+                // 隨機選擇花色（萬/筒/條）
+                const suits = ['wan', 'tong', 'tiao'];
+                const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+                
                 const levelPatterns = VALID_PATTERNS[this.currentLevel];
                 do {
                     const preset = levelPatterns[Math.floor(Math.random() * levelPatterns.length)];
-                    pattern = { tiles: [...preset.base], suit: preset.suit };
+                    // 使用隨機花色，而不是只用 preset.suit
+                    pattern = { tiles: [...preset.base], suit: randomSuit };
                     listening = checker.checkListening(pattern.tiles, pattern.suit, this.currentLevel);
                     
                     // 檢查是否重複
