@@ -42,11 +42,30 @@
             margin-bottom: 10px;
         }
 
-        /* Champion Portrait */
-        .champion-portrait {
+        /* Champions Portrait - 雙冠軍顯示 */
+        .champions-portrait {
             text-align: center;
             padding: 20px;
             margin: 20px 0;
+        }
+
+        .champions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .champion-card {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 15px;
+            transition: transform 0.2s;
+        }
+
+        .champion-card:hover {
+            transform: translateY(-5px);
         }
 
         .champion-frame {
@@ -59,8 +78,8 @@
         }
 
         .champion-photo {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
             border-radius: 10px;
             border: 3px solid #1a472a;
@@ -72,14 +91,14 @@
         }
 
         .champion-name {
-            font-size: 1.5em;
+            font-size: 1.2em;
             font-weight: bold;
             color: #ffd700;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .champion-score {
-            font-size: 1.2em;
+            font-size: 1em;
             opacity: 0.9;
         }
 
@@ -91,6 +110,7 @@
         .no-champion {
             opacity: 0.6;
             font-style: italic;
+            font-size: 0.9em;
         }
 
         /* Admin Login & Panel */
@@ -253,17 +273,58 @@
             image-rendering: -webkit-optimize-contrast;
         }
         
-        /* 手機版優化 */
+        /* 手機版優化 - 直列 */
         @media (max-width: 600px) {
             .tiles-container {
-                gap: 5px;
-                padding: 15px;
+                gap: 3px;
+                padding: 10px 5px;
                 max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                /* 隱藏滾動條但保留功能 */
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .tiles-container::-webkit-scrollbar {
+                display: none;
             }
             
             .tile {
-                width: 35px;
-                height: 49px;
+                width: 24px;
+                height: 34px;
+                flex-shrink: 0;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .champions-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .champion-photo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .champion-name {
+                font-size: 1.1em;
+            }
+            
+            .game-info {
+                flex-wrap: wrap;
+            }
+            
+            .info-box {
+                min-width: 80px;
+                padding: 8px 12px;
+            }
+            
+            .info-box .value {
+                font-size: 1.2em;
             }
         }
         
@@ -877,38 +938,86 @@
                     </ul>
                 </div>
 
-                <!-- Champion Portrait -->
-                <div class="champion-portrait" id="champion-portrait">
-                    <div class="champion-frame">
-                        <img id="champion-photo" class="champion-photo" src="" alt="冠軍照片" style="display: none;">
-                        <div id="champion-placeholder" class="champion-placeholder">
-                            <div class="champion-badge">👑</div>
-                            <div class="no-champion" data-i18n="noChampion">暫無冠軍</div>
+                <!-- Champion Portrait - 顯示兩個等級的冠軍 -->
+                <div class="champions-portrait" id="champions-portrait">
+                    <h3 style="color: #ffd700; margin-bottom: 15px; font-size: 1.3em;">🏆 冠軍殿堂</h3>
+                    <div class="champions-grid">
+                        <!-- 一般級冠軍 -->
+                        <div class="champion-card" id="champion-normal">
+                            <div class="champion-frame">
+                                <img id="champion-photo-normal" class="champion-photo" src="" alt="一般級冠軍照片" style="display: none;">
+                                <div id="champion-placeholder-normal" class="champion-placeholder">
+                                    <div class="champion-badge">👑</div>
+                                    <div class="no-champion">暫無冠軍</div>
+                                </div>
+                            </div>
+                            <div class="champion-info" id="champion-info-normal" style="display: none;">
+                                <div class="champion-name" id="champion-name-normal"></div>
+                                <div class="champion-level" style="color: #4CAF50; font-size: 0.9em; margin: 5px 0;">一般級</div>
+                                <div class="champion-score" id="champion-score-normal"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="champion-info" id="champion-info" style="display: none;">
-                        <div class="champion-name" id="champion-name"></div>
-                        <div class="champion-score" id="champion-score"></div>
+                        <!-- 地獄級冠軍 -->
+                        <div class="champion-card" id="champion-hardcore">
+                            <div class="champion-frame">
+                                <img id="champion-photo-hardcore" class="champion-photo" src="" alt="地獄級冠軍照片" style="display: none;">
+                                <div id="champion-placeholder-hardcore" class="champion-placeholder">
+                                    <div class="champion-badge">👑</div>
+                                    <div class="no-champion">暫無冠軍</div>
+                                </div>
+                            </div>
+                            <div class="champion-info" id="champion-info-hardcore" style="display: none;">
+                                <div class="champion-name" id="champion-name-hardcore"></div>
+                                <div class="champion-level" style="color: #f44336; font-size: 0.9em; margin: 5px 0;">地獄級</div>
+                                <div class="champion-score" id="champion-score-hardcore"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="leaderboard" id="start-leaderboard">
                     <h3 data-i18n="leaderboard">🏆 排行榜</h3>
-                    <div class="leaderboard-table-wrapper">
-                        <table id="leaderboard-table">
-                            <thead>
-                                <tr>
-                                    <th data-i18n="rank">名次</th>
-                                    <th data-i18n="name">姓名</th>
-                                    <th data-i18n="score">分數</th>
-                                    <th data-i18n="correct">答對</th>
-                                    <th data-i18n="time">時間</th>
-                                </tr>
-                            </thead>
-                            <tbody id="leaderboard-body">
-                                <tr><td colspan="5" data-i18n="noRecord">暫無記錄</td></tr>
-                            </tbody>
-                        </table>
+                    
+                    <!-- 一般級排行榜 -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #4CAF50; text-align: center; margin-bottom: 10px;">一般級</h4>
+                        <div class="leaderboard-table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>名次</th>
+                                        <th>姓名</th>
+                                        <th>分數</th>
+                                        <th>答對</th>
+                                        <th>時間</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboard-body-normal">
+                                    <tr><td colspan="5">暫無記錄</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 地獄級排行榜 -->
+                    <div>
+                        <h4 style="color: #f44336; text-align: center; margin-bottom: 10px;">地獄級</h4>
+                        <div class="leaderboard-table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>名次</th>
+                                        <th>姓名</th>
+                                        <th>分數</th>
+                                        <th>答對</th>
+                                        <th>時間</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboard-body-hardcore">
+                                    <tr><td colspan="5">暫無記錄</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -1747,12 +1856,39 @@
             }
 
             async renderLeaderboard(elementId) {
-                const tbody = document.getElementById(elementId);
-                // 從 Firebase 載入排行榜
-                const leaderboard = await firebaseStorage.fetchLeaderboard(this.currentLevel);
+                // 如果 elementId 是最終結果頁面的，只顯示當前等級
+                if (elementId === 'final-leaderboard-body') {
+                    const tbody = document.getElementById(elementId);
+                    const leaderboard = await firebaseStorage.fetchLeaderboard(this.currentLevel);
+                    
+                    if (leaderboard.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5">${this.getI18nText('noRecord')}</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = leaderboard.map((entry, i) => `
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>${entry.name}</td>
+                            <td>${entry.score}</td>
+                            <td>答對${entry.correct || 0}題/${entry.total || 10}題</td>
+                            <td>${entry.timeStr}</td>
+                        </tr>
+                    `).join('');
+                    return;
+                }
+                
+                // 否則渲染兩個等級的排行榜
+                await this.renderSingleLeaderboard('normal');
+                await this.renderSingleLeaderboard('hardcore');
+            }
+
+            async renderSingleLeaderboard(level) {
+                const tbody = document.getElementById(`leaderboard-body-${level}`);
+                const leaderboard = await firebaseStorage.fetchLeaderboard(level);
                 
                 if (leaderboard.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5">${this.getI18nText('noRecord')}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5">暫無記錄</td></tr>`;
                     return;
                 }
 
@@ -1793,16 +1929,22 @@
             }
 
             async renderChampionPortrait() {
-                const championPhoto = await firebaseStorage.fetchChampionPhoto(this.currentLevel) || 
-                                      localStorage.getItem('mj_champion_photo_' + this.currentLevel);
+                // 渲染兩個等級的冠軍
+                await this.renderSingleChampion('normal');
+                await this.renderSingleChampion('hardcore');
+            }
+
+            async renderSingleChampion(level) {
+                const championPhoto = await firebaseStorage.fetchChampionPhoto(level) || 
+                                      localStorage.getItem('mj_champion_photo_' + level);
                 // 從 Firebase 載入排行榜，確保不同瀏覽器能看到一樣的冠軍
-                const leaderboard = await firebaseStorage.fetchLeaderboard(this.currentLevel);
+                const leaderboard = await firebaseStorage.fetchLeaderboard(level);
                 
-                const photoEl = document.getElementById('champion-photo');
-                const placeholderEl = document.getElementById('champion-placeholder');
-                const infoEl = document.getElementById('champion-info');
-                const nameEl = document.getElementById('champion-name');
-                const scoreEl = document.getElementById('champion-score');
+                const photoEl = document.getElementById(`champion-photo-${level}`);
+                const placeholderEl = document.getElementById(`champion-placeholder-${level}`);
+                const infoEl = document.getElementById(`champion-info-${level}`);
+                const nameEl = document.getElementById(`champion-name-${level}`);
+                const scoreEl = document.getElementById(`champion-score-${level}`);
                 
                 if (championPhoto && leaderboard.length > 0) {
                     const champion = leaderboard[0];
