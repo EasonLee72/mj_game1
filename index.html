@@ -275,20 +275,30 @@
         
         /* 手機版優化 - 直列 */
         @media (max-width: 600px) {
-            .tiles-container {
-                gap: 1px;
-                padding: 5px 3px;
-                max-width: 100vw;
-                /* 不允許橫向滾動，強制壓縮顯示 */
-                overflow: hidden;
+            .container {
+                padding: 10px;
             }
             
-            /* 地獄級 17 張牌 - 固定小尺寸確保完全顯示 */
+            .tiles-container {
+                gap: 2px;
+                padding: 5px;
+                width: 100%;
+                max-width: 100%;
+                margin: 10px 0;
+                box-sizing: border-box;
+            }
+            
+            /* 手機版 - 固定小尺寸確保完全顯示 */
             .tile {
-                width: 16px;
-                height: 22px;
+                width: 12px;
+                height: 17px;
                 border-width: 1px;
                 flex-shrink: 0;
+            }
+            
+            .tile img {
+                width: 100%;
+                height: 100%;
             }
             
             .header h1 {
